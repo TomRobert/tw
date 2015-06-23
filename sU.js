@@ -4,6 +4,6 @@ InvBuff: '2.25',
 quicksearch: '1.1.6',
 TWLT: '1.23.2',
 Tweaker: '0.1.13',
-GoldJobs: '1.03',
+GoldJobs: '1.04',
 npcLocator: '1.1.0',
 };
