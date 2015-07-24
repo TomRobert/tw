@@ -1,7 +1,7 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.6',
-InvBuff: '2.26',
-quicksearch: '1.1.8',
+InvBuff: '2.27',
+quicksearch: '1.1.9',
 TWLT: '1.23.2',
 Tweaker: '0.1.13',
 GoldJobs: '1.04',
