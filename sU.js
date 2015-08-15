@@ -7,5 +7,5 @@ Tweaker: '0.1.13',
 GoldJobs: '1.04',
 npcLocator: '1.1.0',
 TWS: '1.1.4',
-DJ: '2.3.3',
+DJ: '2.3.4',
 };
