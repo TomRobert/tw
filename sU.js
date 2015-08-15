@@ -6,6 +6,6 @@ TWLT: '1.23.2',
 Tweaker: '0.1.13',
 GoldJobs: '1.04',
 npcLocator: '1.1.0',
-TWS: '1.1.3',
+TWS: '1.1.4',
 DJ: '2.3.3',
 };
