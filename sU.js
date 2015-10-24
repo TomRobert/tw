@@ -1,8 +1,8 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.6',
-InvBuff: '2.30',
+InvBuff: '2.31',
 InvBuffNew: '',
-quicksearch: '1.2.3',
+quicksearch: '1.2.4',
 quicksearchNew: '',
 TWLT: '1.24.2',
 Tweaker: '0.1.14',
