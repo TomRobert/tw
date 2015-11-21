@@ -1,7 +1,7 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.6',
-InvBuff: '2.31',
-InvBuffNew: '',
+InvBuff: '2.32',
+InvBuffNew: '2 new items (TW v2.30), high level crafting items have new effects (TW v2.31.4) ',
 quicksearch: '1.2.6',
 quicksearchNew: 'High level crafting items have new effects (TW v2.31.4)',
 TWLT: '1.24.3',
