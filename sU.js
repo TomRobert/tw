@@ -2,7 +2,7 @@ var scriptUpdate = {
 colorTxt: '0.2.9.6',
 InvBuff: '2.33',
 InvBuffNew: 'New items (Christmas Sale 2015)',
-quicksearch: '1.2.7',
+quicksearch: '1.2.8',
 quicksearchNew: '-1 new item (TW v2.33)<br>-Little images added to the selectbox<br>-Sets are now translated to every server language',
 TWLT: '1.24.3',
 TWLTNew: '',
