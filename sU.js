@@ -13,5 +13,5 @@ npcLocator: '1.1.1',
 npcLocatorNew: '',
 TWS: '1.1.4',
 DJ: '2.3.4',
+TWM: '4.150',
 };
-TWM.updater.check(4.150);
