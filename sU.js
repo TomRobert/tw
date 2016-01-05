@@ -9,6 +9,7 @@ TWLTNew: '-SetBonus: Calculation of \'pray\' fixed<br>-Open \'contact\' tab fixe
 Tweaker: '0.1.15',
 TweakerNew: '',
 GoldJobs: '1.04',
+GoldJobsNew: 'test<br>hehe',
 npcLocator: '1.1.1',
 npcLocatorNew: '',
 TWS: '1.1.4',
