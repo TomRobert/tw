@@ -7,7 +7,7 @@ quicksearchNew: '-1 new item (TW v2.33)<br>-Little images added to the selectbox
 TWLT: '1.26',
 TWLTNew: '-new feature: WebCenter (Quakenet Webchat & TW Forum available ingame)<br>-Ctrl+click works everywhere now, not only on the items in the inventory',
 Tweaker: '0.1.16',
-TweakerNew: '-Polish corrected<br>-Script is now compatible with '<a target=\'_blanck\' href="https://greasyfork.org/scripts/13506">The West - Toolkit</a>',
+TweakerNew: '-Polish corrected<br>-Script is now compatible with <a target=\'_blanck\' href="https://greasyfork.org/scripts/13506">The West - Toolkit</a>',
 GoldJobs: '1.05',
 GoldJobsNew: '',
 npcLocator: '1.1.1',
