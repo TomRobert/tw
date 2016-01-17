@@ -15,4 +15,6 @@ npcLocatorNew: '',
 TWS: '1.1.4',
 DJ: '2.3.4',
 TWM: '4.153',
+BS: '1.0.10',
+BSNew: '',
 };
