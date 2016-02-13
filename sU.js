@@ -1,7 +1,7 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.6',
-InvBuff: '2.33',
-InvBuffNew: 'New items (Christmas Sale 2015)',
+InvBuff: '2.34',
+InvBuffNew: 'Last update for this script!',
 quicksearch: '1.3.0',
 quicksearchNew: 'New sets added (Valentine\'s Day event 2016)',
 TWLT: '1.27',
