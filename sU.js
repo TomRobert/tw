@@ -1,5 +1,5 @@
 var scriptUpdate = {
-colorTxt: '0.2.9.6',
+colorTxt: '0.2.9.5',
 InvBuff: '2.34',
 InvBuffNew: 'Last update for this script!',
 quicksearch: '1.3.1',
