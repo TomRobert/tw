@@ -18,6 +18,6 @@ DJ: '2.3.4',
 TWM: '4.154',
 BS: '1.0.11',
 BSNew: '-Spanish added<br>-Compatibility with TW-Toolkit',
-TWNotifier: '1.010',
-TWNotifierNew: 'many',
+TWNotifier: '1.011',
+TWNotifierNew: 'Portuguese added',
 };
