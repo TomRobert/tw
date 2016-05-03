@@ -10,7 +10,7 @@ TWLTNew: '-Hungarian added<br><br>-SetBonus/BonusSearch: It\'s now all legal. On
 Tweaker: '0.1.17',
 TweakerNew: 'Topic of alliance-chat also supported',
 GoldJobs: '1.08',
-GoldJobsNew: 'BBcode export is now shorter and in alphabetical order',
+GoldJobsNew: 'BBcode export is now shorter and in alphabetical order<br><br><b>If the message appears more than once, you have 2 Gold Jobs scripts installed.<br>Remove the old one!</b>',
 npcLocator: '1.1.1',
 npcLocatorNew: '',
 TWS: '1.1.4',
