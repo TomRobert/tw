@@ -14,6 +14,7 @@ GoldJobsNew: 'BBcode export is now shorter and in alphabetical order<br><br><b>I
 npcLocator: '1.1.1',
 npcLocatorNew: '',
 TWS: '1.1.4',
+TWNewS: 'testmessage',
 DJ: '2.3.4',
 TWM: '4.156',
 BS: '1.0.12',
