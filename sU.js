@@ -14,7 +14,7 @@ GoldJobsNew: 'BBcode export is now shorter and in alphabetical order<br><br><b>I
 npcLocator: '1.1.1',
 npcLocatorNew: '',
 TWS: '1.1.6',
-TWSNew: 'WIR improved, ExTB fixed, Forum last page fixed, other improvements',
+TWSNew: 'WIR works now with item pinning from twdb clothcalc, translations expanded<br><br><b>v1.1.6:</b><br>WIR improved, ExTB fixed, Forum last page fixed, other improvements<br><br><b>v1.1.5:</b><br>major bugfixes, most of the old features are working again',
 DJ: '2.3.4',
 TWM: '4.157',
 BS: '1.0.12',
