@@ -19,6 +19,6 @@ DJ: '2.3.4',
 TWM: '4.158',
 BS: '1.0.12',
 BSNew: 'Polish added',
-TWNotifier: '1.011',
-TWNotifierNew: 'Portuguese added',
+TWNotifier: '1.020',
+TWNotifierNew: 'New event - nick in chat:<br>You get a sound when your nickname is mentioned in the chat.',
 };
