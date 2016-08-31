@@ -23,6 +23,6 @@ TWNotifier: '1.020',
 TWNotifierNew: 'New event - nick in chat:<br>You get a sound when your nickname is mentioned in the chat.',
 twmbb: '0.4.6',
 twmbbNew: '',
-Grander: '1.6.5',
+Grander: '1.65',
 GranderNew: 'New forum links',
 };
