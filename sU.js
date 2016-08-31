@@ -21,4 +21,6 @@ BS: '1.0.12',
 BSNew: 'Polish added',
 TWNotifier: '1.020',
 TWNotifierNew: 'New event - nick in chat:<br>You get a sound when your nickname is mentioned in the chat.',
+twmbb: '0.4.6',
+twmbbNew: '',
 };
