@@ -1,8 +1,6 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.5',
 colorTxtNew: 'little',
-InvBuff: '2.34',
-InvBuffNew: 'Last update for this script!',
 quicksearch: '1.4.0',
 quicksearchNew: 'New items (TW v2.41)',
 TWLT: '1.30.2',
@@ -25,4 +23,6 @@ twmbb: '0.4.6',
 twmbbNew: '',
 Grander: '1.65',
 GranderNew: 'New forum links',
+InvBuff: '2.34',
+InvBuffNew: 'Last update for this script!',
 };
