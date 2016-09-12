@@ -1,8 +1,8 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.7',
 colorTxtNew: '-"octoberfest!" icon added<br>-Flip mode improved<br>-New forum links and choose language in script window<br>-Some bb code removed, because most don\'t work in chat',
-quicksearch: '1.4.0',
-quicksearchNew: 'New items (TW v2.41)',
+quicksearch: '1.4.1',
+quicksearchNew: 'New sets & items (Octoberfest event 2016 - TW v2.42) ',
 TWLT: '1.30.3',
 TWLTNew: '-SetBonus: message when I\'ve added new sets<br>-WebCenter: forum removed, it didn\'t work anymore<br>-Contact: new forum links',
 Tweaker: '0.1.18',
