@@ -25,4 +25,5 @@ KoMNew: '-Better error message at init (first 10 seconds)<br><br><b>v1.70:</b><b
 InvBuff: '2.34',
 InvBuffNew: 'Last update for this script!',
 DJ: '2.3.4',
+DJNew: 'DJ',
 };
