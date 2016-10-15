@@ -24,6 +24,6 @@ KoM: '1.71',
 KoMNew: '-Better error message at init (first 10 seconds)<br><br><b>v1.70:</b><br>-You can now send a telegram to your ally members to inform about the battle:<br>Just click on the blue flag in the battle-chat title.<br>-The popup has more details',
 InvBuff: '2.34',
 InvBuffNew: 'Last update for this script!',
-DJ: '2.3.4',
-DJNew: 'DJ',
+DJ: '2.3.5',
+DJNew: '',
 };
