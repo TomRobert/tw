@@ -1,6 +1,6 @@
 var scriptUpdate = {
-colorTxt: '0.2.9.7',
-colorTxtNew: '-"octoberfest!" icon added<br>-Flip mode improved<br>-New forum links and choose language in script window<br>-Some bb code removed, because most don\'t work in chat',
+colorTxt: '0.2.9.8',
+colorTxtNew: '"dayofdead!" and "independence!" icon added',
 quicksearch: '1.4.2',
 quicksearchNew: 'New items (TW v2.43)',
 TWLT: '1.31.1',
