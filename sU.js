@@ -1,8 +1,8 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.8',
 colorTxtNew: '"dayofdead!" and "independence!" icon added',
-quicksearch: '1.4.2',
-quicksearchNew: 'New items (TW v2.43)',
+quicksearch: '1.4.3',
+quicksearchNew: '-New sets & items (Day of the Dead event 2016 - TW v2.45)<br>-Choose language<br>-New categories: luck & money, motivation, experience',
 TWLT: '1.31.1',
 TWLTNew: '-BonusSearch: skills and sector bonuses added<br>-Spanish corrected',
 Tweaker: '0.1.19',
