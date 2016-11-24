@@ -1,8 +1,8 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.8',
 colorTxtNew: '"dayofdead!" and "independence!" icon added',
-quicksearch: '1.4.3',
-quicksearchNew: '-New sets & items (Day of the Dead event 2016 - TW v2.45)<br>-Choose language<br>-New categories: luck & money, motivation, experience',
+quicksearch: '1.4.4',
+quicksearchNew: 'New items (TW v2.46)',
 TWLT: '1.35',
 TWLTNew: '-New feature: ChatProfessions - see the crafting professions of the players in the chat list<br>-BetterSheriff: some improvements<br>Spanish updated',
 Tweaker: '0.1.19',
