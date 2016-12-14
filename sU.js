@@ -1,8 +1,8 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.8',
 colorTxtNew: '"dayofdead!" and "independence!" icon added',
-quicksearch: '1.4.4',
-quicksearchNew: 'New items (TW v2.46)',
+quicksearch: '1.4.5',
+quicksearchNew: 'New items (Christmas Sale 2016 - TW v2.47)',
 TWLT: '1.35.1',
 TWLTNew: '-CTRL+click shows item on TW-Calc, ALT+click shows item on TWDB<br>-WebCenter:TW-DB.info added<br>-ChatProfessions: bugfix',
 Tweaker: '0.1.19',
