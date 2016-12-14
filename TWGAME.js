@@ -2389,6 +2389,16 @@ Array.prototype.unique = function () {
     clearTimeout(id);
   };
 }());
+(function () {
+  var prefix = window.PointerEvent ? 'pointer' : 'mouse';
+  window.MouseEvent.POINTER_DOWN = prefix + 'down';
+  window.MouseEvent.POINTER_ENTER = prefix + 'enter';
+  window.MouseEvent.POINTER_LEAVE = prefix + 'leave';
+  window.MouseEvent.POINTER_MOVE = prefix + 'move';
+  window.MouseEvent.POINTER_OUT = prefix + 'out';
+  window.MouseEvent.POINTER_OVER = prefix + 'over';
+  window.MouseEvent.POINTER_UP = prefix + 'up';
+}) ();
 var MousePopup = function (text, disableBg, type, handler, delay) {
   this.setXHTML(text);
   this.disableBg = disableBg;
@@ -2513,7 +2523,7 @@ MousePopup.prototype.getXHTML = function (just_text) {
 };
 MousePopup.prototype.kill = function () {
   MousePopup.getEl().css({
-    visibility: 'hidden',
+    display: 'none',
     top: 0,
     left: 0
   });
@@ -2545,7 +2555,7 @@ MousePopup.prototype.setTimeout = function () {
   MousePopup.clearTimeout();
   var that = this;
   MousePopup.timer = window.setTimeout(function () {
-    MousePopup.getEl().css('visibility', 'visible');
+    MousePopup.getEl().css('display', '');
     that.notify('onShow');
   }, this.delay);
 };
@@ -8344,20 +8354,20 @@ window.wman = (function () {
         b = old.height - (off.top + h),
         mx = off.left + w / 2,
         my = off.top + h / 2;
-        if (mx >= mid.x0 && my <= mid.x1)
+        if (mx >= mid.x0 && mx <= mid.x1)
         off.left = (off.left + (w / 2)) * fw - (w / 2);
          else if (off.left < r)
         off.left = off.left * fw;
          else
         off.left = (off.left + w) * fw - w;
-        if (mx >= mid.y0 && my < mid.y1)
+        if (my >= mid.y0 && my < mid.y1)
         off.top = (off.top + (h / 2)) * fh - (h / 2);
          else if (off.top < b)
         off.top = off.top * fh;
          else
         off.top = (off.top + h) * fh - h;
-        off.left = Math.min(wnd.width() - w, Math.max(0, off.left));
-        off.top = Math.min(wnd.height() - h, Math.max(0, off.top));
+        off.left = Math.max(0, Math.min(wnd.width() - w, off.left));
+        off.top = Math.max(0, Math.min(wnd.height() - h, off.top));
         e.offset(off);
       });
     } else {
@@ -9078,6 +9088,8 @@ west.define('west.storage.FriendsBar', null, {
     },
     e: 0,
     drag: function (v) {
+      v.pageX = v.pageX || v.originalEvent.pageX;
+      v.pageY = v.pageY || v.originalEvent.pageY;
       var css = M.k == 'd' ? {
         left: Math.max(M.rangex[0], Math.min(M.rangex[1], M.X + v.pageX - M.pX)),
         top: Math.max(M.rangey[0], Math.min(M.rangey[1], M.Y + v.pageY - M.pY))
@@ -9097,7 +9109,7 @@ west.define('west.storage.FriendsBar', null, {
       if (M.ops.onStop) M.ops.onStop.apply(M.ops, [
         v
       ]);
-      $(document).off('mousemove', J.drag).off('mouseup', J.stop);
+      $(document).off(MouseEvent.POINTER_MOVE, J.drag).off(MouseEvent.POINTER_UP, J.stop);
     },
     mousedown: function (v) {
       var d = v.data,
@@ -9118,8 +9130,8 @@ west.define('west.storage.FriendsBar', null, {
         Y: p.top || f('top') || 0,
         W: f('width') || E[0].scrollWidth || 0,
         H: f('height') || E[0].scrollHeight || 0,
-        pX: v.pageX,
-        pY: v.pageY,
+        pX: v.pageX || v.originalEvent.pageX,
+        pY: v.pageY || v.originalEvent.pageY,
         k: d.k,
         ops: d.ops,
         rangex: d.ops.rangex || [
@@ -9131,7 +9143,7 @@ west.define('west.storage.FriendsBar', null, {
           65535
         ]
       };
-      $(document).mousemove($.jqDnR.drag).mouseup($.jqDnR.stop);
+      $(document).on(MouseEvent.POINTER_MOVE, $.jqDnR.drag).on(MouseEvent.POINTER_UP, $.jqDnR.stop);
       return false;
     }
   };
@@ -9141,7 +9153,7 @@ west.define('west.storage.FriendsBar', null, {
   i = function (e, h, ops, k) {
     return e.each(function () {
       h = (h) ? $(h, e)  : e;
-      h.on('mousedown.jqDnR', {
+      h.on(MouseEvent.POINTER_DOWN + '.jqDnR', {
         e: e,
         k: k,
         ops: ops || {
@@ -9152,7 +9164,7 @@ west.define('west.storage.FriendsBar', null, {
   j = function (e, h) {
     return e.each(function () {
       h = (h) ? $(h, e)  : e;
-      h.off('mousedown.jqDnR', $.jqDnR.mousedown).removeClass('draggable');
+      h.off(MouseEvent.POINTER_DOWN + '.jqDnR', $.jqDnR.mousedown).removeClass('draggable');
     });
   },
   f = function (k) {
@@ -18104,6 +18116,7 @@ var Map = Map || {
   },
   dragged,
   absMove,
+  pointerId,
   enabled = true,
   activeTutorial = false;
   var cancelEvent = function (event) {
@@ -18113,10 +18126,11 @@ var Map = Map || {
   var mousedown = function (event) {
     dragged = false;
     absMove = 0;
+    pointerId = event.originalEvent.pointerId;
     activeTutorial = LinearQuestHandler.hasTutorialQuest();
     lastPos = {
-      x: event.clientX,
-      y: event.clientY
+      x: event.clientX || event.originalEvent.clientX,
+      y: event.clientY || event.originalEvent.clientY
     };
     var mapOffset = Map.Draw.getOffset();
     lastRendered = {
@@ -18134,11 +18148,15 @@ var Map = Map || {
       mapEl.attachEvent('onlosecapture', mouseup);
     } 
     else {
-      document.addEventListener('mousemove', mousemove, true);
-      document.addEventListener('mouseup', mouseup, true);
+      document.addEventListener(MouseEvent.POINTER_MOVE, mousemove, true);
+      document.addEventListener(MouseEvent.POINTER_UP, mouseup, true);
+      document.addEventListener('pointercancel', mouseup, true);
     }
   };
   var mouseup = function (event) {
+    if (event.pointerId !== pointerId) {
+      return;
+    }
     var mapEl = Map.mapEl[0];
     if (mapEl.releaseCapture && mapEl.detachEvent) {
       mapEl.detachEvent('onlosecapture', mouseup);
@@ -18146,8 +18164,9 @@ var Map = Map || {
       mapEl.detachEvent('onmousemove', mousemove);
       mapEl.releaseCapture();
     } else {
-      document.removeEventListener('mouseup', mouseup, true);
-      document.removeEventListener('mousemove', mousemove, true);
+      document.removeEventListener(MouseEvent.POINTER_UP, mouseup, true);
+      document.removeEventListener(MouseEvent.POINTER_MOVE, mousemove, true);
+      document.removeEventListener('pointercancel', mouseup, true);
     }
     $('body').removeClass('drag').css('cursor', '');
     $('body').removeAttr('onselectstart');
@@ -18155,6 +18174,9 @@ var Map = Map || {
     EventHandler.signal('map-center-changed');
   };
   var mousemove = function (event) {
+    if (event.pointerId !== pointerId) {
+      return;
+    }
     if (absMove < 20) {
       absMove += Math.abs(event.clientX - lastPos.x) + Math.abs(event.clientY - lastPos.y);
       return;
@@ -18318,7 +18340,7 @@ var Map = Map || {
   var htks;
   return {
     init: function (el) {
-      el.on('mousedown', mousedown);
+      el.on(MouseEvent.POINTER_DOWN, mousedown);
       (htks = [
         new Hotkey('mapright', 'right', 'Right', function () {
           hotkeymove( - 50, 'x', 'left');
@@ -18337,7 +18359,7 @@ var Map = Map || {
       });
     },
     finalize: function (el) {
-      el.off('mousedown', mousedown);
+      el.off(MouseEvent.POINTER_DOWN, mousedown);
       htks.each(function (hk) {
         HotkeyManager.unregister(hk);
       });
@@ -25681,10 +25703,10 @@ $(function ($) {
         'wof-unlock': {
           name: 'Loteria de Muertos'
         },
-        'avatar-flower': {
+        'avatar-part-1': {
           name: 'Avatar graphic '
         },
-        'avatar-skull': {
+        'avatar-part-2': {
           name: 'Avatar graphic '
         }
       }
@@ -25815,10 +25837,10 @@ $(function ($) {
         'custom_map_rivers_red': {
           name: 'Día de los Muertos'
         },
-        'quest_2163': {
+        'quest_2627': {
           name: 'Special questline'
         },
-        'achievement_50189': {
+        'achievement_50226': {
           name: 'Special achievement'
         }
       }
@@ -27793,10 +27815,10 @@ Game.TextHandler = function () {
         return '<a href=\'javascript:void(parent.MarkerUi.importMarker(' + x + ',' + y + ',"' + desc.escapeHTML() + '"))\'>Marker: ' + desc + '</a>';
       });
       for (var k in sm) {
-        m = m.replace(new RegExp('(^|\\s)' + k.replace(/([\)\.\^\(])/g, '\\$1'), 'g'), ' <img src=\'https://westzzs.innogamescdn.com/images/chat/emoticons/' + sm[k] + '.png?1\' />');
+        m = m.replace(new RegExp('(^|\\s|\\u2060)' + k.replace(/([\)\.\^\(])/g, '\\$1'), 'g'), ' <img src=\'https://westzzs.innogamescdn.com/images/chat/emoticons/' + sm[k] + '.png?1\' />');
       }
       for (var k in sa) {
-        m = m.replace(new RegExp('(^|\\s)' + k, (sa[k].flags ? sa[k].flags : 'g')), ' <img src=\'https://westzzs.innogamescdn.com/images/chat/emoticons/' + sa[k].src + '\' /> ' + (sa[k].text ? sa[k].text : '') + '');
+        m = m.replace(new RegExp('(^|\\s|\\u2060)' + k, (sa[k].flags ? sa[k].flags : 'g')), ' <img src=\'https://westzzs.innogamescdn.com/images/chat/emoticons/' + sa[k].src + '\' /> ' + (sa[k].text ? sa[k].text : '') + '');
       }
       if (west && west.events && west.events.Manager) {
         west.common.forEach(west.events.Manager.getRunningEventsCurrencies(), function (obj) {
@@ -28831,11 +28853,11 @@ ItemPopup.calcComparePosition = (function () {
 }) ();
 ItemPopup.showDivCompare = function () {
   if (this.noComparison()) return;
-  $('#popup_div_compare').css('visibility', 'visible');
+  $('#popup_div_compare').css('display', '');
 };
 ItemPopup.hideDivCompare = function () {
   $('#popup_div_compare').css({
-    visibility: 'hidden',
+    display: 'none',
     top: 0,
     left: 0
   });
@@ -29651,8 +29673,6 @@ Config.init = function (data) {
   this.setDefaultValue('chat.opacity', 80);
   this.setDefaultValue('duel.viewtype', 1);
   this.setDefaultValue('marker.minimap', 2);
-  this.setDefaultValue('questtracker.config', {
-  });
   this.setDefaultValue('questtracker.quests', {
   });
   this.setDefaultValue('questtracker.enabled', true);
@@ -43500,7 +43520,7 @@ general: 'General'
 },
 formatText: function (m, avoidEscape) {
 m = (avoidEscape ? m : m.escapeHTML()).replace(/(\S{100})/g, '$1&shy;').replace(/(\s?\*[^\*]+\*\s?)/g, '<b>$1</b>');
-m = m.split(/ (?=\/\d\d\d)/).map(function (v) {
+m = m.split(/[\s\u2060](?=\/\d\d\d)/).map(function (v) {
 var rgb = v.match(/^\/(\d)(\d)(\d)(\s*)(.*?)(\s*)$/);
 return rgb ? rgb[4] + '<div style=\'display:inline-block;color:#' + Math.floor(rgb[1] * 15 / 9).toString(16)
 + Math.floor(rgb[2] * 15 / 9).toString(16)
@@ -44684,7 +44704,7 @@ setter = response.payload.topicsetter.escapeHTML(),
 room = Chat.Resource.Manager.getRoom(response.payload.id);
 if (!room) return;
 room.setTopic(topic, setter);
-var text = topic ? s('%1 has set a new topic: \'%2\'', setter, topic)  : s('%1 has deleted the topic.', setter);
+var text = topic ? s('%1 has set a new topic: \'%2\'', setter, '⁠' + topic + '⁠/999')  : s('%1 has deleted the topic.', setter);
 Chat.pushMessage(room, Chat.Formatter.formatResponse(room, room, text, response.t));
 };
 Response.Affront = function (response) {
@@ -45372,12 +45392,13 @@ chatSide.toggleClass('contact_open');
 chatSide.jqResize('.chat_side_resize', {
 onStart: function (ev) {
 this.w = chatSide.width();
-this.initX = this.lastX = ev.clientX;
+this.initX = this.lastX = ev.clientX || ev.originalEvent.clientX;
 },
 onDrag: function (ev, css) {
 noClick = true;
-this.w = css.width = this.w - (this.lastX - ev.clientX) * - 1;
-this.lastX = ev.clientX;
+var clientX = ev.clientX || ev.originalEvent.clientX;
+this.w = css.width = this.w - (this.lastX - clientX) * - 1;
+this.lastX = clientX;
 if (this.w <= 20) chatSide.removeClass('contact_open');
  else chatSide.addClass('contact_open');
 },
@@ -45494,7 +45515,7 @@ updateTopic: function () {
 var topic = this.room.getTopic(),
 el = $('.chat_topic', this.mainDiv);
 if (topic) {
-el.text(topic).prepend('<b>' + 'Topic:' + '</b> ');
+el.html('<b>' + 'Topic:' + '</b> ' + Chat.Formatter.formatText(topic));
 el.show();
 } else {
 el.hide();
@@ -48992,6 +49013,7 @@ var obj = {
 var enabledTracker,
 enabledBook;
 var minimized = false;
+var confStorageKey = 'west.questTracker.config';
 obj.defaults = function (render) {
 obj.position = {
 left: Map.width - 425,
@@ -49026,10 +49048,13 @@ Config.addChangeListener('notebook.enabled', function () {
 enabledBook = Config.get('notebook.enabled');
 obj.init();
 });
-var qtc = Config.get('questtracker.config');
+var qtc = JSON.parse(localStorage.getItem(confStorageKey) || '{}');
 obj.maxHeight = qtc.maxHeight || obj.maxHeight;
 obj.position = qtc.position || obj.position;
 obj.init();
+if (!minimized && window.innerWidth <= 1024) {
+obj.minimize();
+}
 };
 obj.deactivate = function () {
 for (var questId in obj.trackedQuests) {
@@ -49079,7 +49104,9 @@ var opts = {
 boundto: this.window
 };
 EventHandler.listen('window_resized', function () {
+if (!minimized) {
 obj.show();
+}
 }, obj, opts);
 $.each(['.tw2gui_window_shadow_box div, ' + '.tw2gui_window_inset div, ' + '.tw2gui_window_inset_bottom, ' + '.tw2gui_window_inset_right, ' + '.tw2gui_window_border, ' + '.tw2gui_inner_splitwindow_container, ' + '.tw2gui_inner_window_title div, ' + '.tw2gui_window_tabbar_fadeleft, ' + '.tw2gui_window_tabbar_faderight'], function (i, k) {
 $(k, obj.dom).remove();
@@ -49090,14 +49117,14 @@ switch (id) {
 case 1:
 obj.maxHeight = obj.dom.height();
 obj.position = obj.dom.position();
-Config.set('questtracker.config', {
+localStorage.setItem(confStorageKey, JSON.stringify({
 'maxHeight': obj.maxHeight,
 'position': obj.position
-});
+}));
 break;
 default:
 case 2:
-Config.reset('questtracker.config');
+localStorage.removeItem(confStorageKey);
 obj.defaults(true);
 break;
 }
@@ -54414,7 +54441,7 @@ Ajax.remoteCall('serverinfo', 'track_view', {
 camp_id: nextCampaign.campaign_id,
 type: nextCampaign.type
 });
-if ('crm' === nextCampaign.type) {
+if ('crm' === nextCampaign.type || 'crm3' === nextCampaign.type) {
 var imgUrl = 'https://westzzs.innogamescdn.com/images/crm/crm_' + nextCampaign.campaign_id + '.jpg';
 $('.announcements .tw2gui_window_tabbar').hide();
 $('.announcements .tw2gui_window_content_pane').css('cursor', 'pointer');
@@ -54454,7 +54481,8 @@ that.window.empty().append(scroll.getMainDiv(), $('<div class=\'wnd-footer\' />'
 ServerInfoWindow.Announcements.readCRM = function ()
 {
 Ajax.remoteCall('serverinfo', 'claim_reward', {
-camp_id: ServerInfoWindow.currentCampaign.campaign_id
+camp_id: ServerInfoWindow.currentCampaign.campaign_id,
+type: ServerInfoWindow.currentCampaign.type
 }, function (resp)
 {
 if (resp.reward !== undefined) {
@@ -65579,7 +65607,7 @@ var getCellEl = function () {
 if (!cellEl) cellEl = $('.cell-' + getCurCellIdx(), battlegroundEl);
 return cellEl;
 };
-if (e.type == 'mousedown') {
+if (e.type == MouseEvent.POINTER_DOWN) {
 if (!$('.ownchar', battlegroundEl).length) {
 return isStartArea(isDefender, getCurCellIdx(), map) && spawnIcon(getCellEl(), 'ownchar');
 } else if (!$('.target', battlegroundEl).length) {
@@ -65589,12 +65617,12 @@ var match = getCellEl().children().filter('.ownchar, .target').get(0);
 if (match) activeDrag = match.className;
 return activeDrag;
 } 
-else if (e.type == 'mouseup') {
+else if (e.type == MouseEvent.POINTER_UP) {
 that.savePosition();
 activeDrag = null;
 that.updatePlayerlist(true);
 } 
-else if (e.type == 'mousemove') {
+else if (e.type == MouseEvent.POINTER_MOVE) {
 popup = that.showCellPopup(e.clientX, e.clientY, getCurCellIdx(), isDefender);
 if (currentCellIdx == getCurCellIdx()) return;
 currentCellIdx = getCurCellIdx();
@@ -65605,13 +65633,13 @@ if (activeDrag) {
 $('.' + activeDrag, battlegroundEl).remove();
 spawnIcon(getCellEl(), activeDrag);
 }
-} else if (e.type == 'mouseout' && e.currentTarget.className == 'fort_battle_battleground') {
+} else if (e.type == MouseEvent.POINTER_OUT && e.currentTarget.className == 'fort_battle_battleground') {
 highlightSector(battlegroundEl);
 that.clearFog();
 popup && popup.kill();
 }
 };
-this.battlegroundEl.mousedown(handler).mousemove(handler).mouseout(handler).mouseup(handler);
+this.battlegroundEl.on(MouseEvent.POINTER_DOWN, handler).on(MouseEvent.POINTER_MOVE, handler).on(MouseEvent.POINTER_OUT, handler).on(MouseEvent.POINTER_UP, handler);
 };
 FortBattleWindow.infoareaNavigation = function () {
 var nav = {
@@ -65682,7 +65710,7 @@ title = s('%1 from %2', Game.InfoHandler.getLocalString4Charclass(players[i]['cl
 title = Game.InfoHandler.getLocalString4Charclass(players[i]['class']);
 list += '<div class="player playercell-' + cellIdx + '" title="' + title + '">' + players[i].name + '</div>';
 }
-$('.fort_battle_playerlist_list', this.infoareaEl).off().on('mousemove', highlightCell(this.battlegroundEl)).mouseout(highlightCell(this.battlegroundEl, true)).empty().append(new west.gui.Scrollpane().appendContent(list).getMainDiv());
+$('.fort_battle_playerlist_list', this.infoareaEl).off().on(MouseEvent.POINTER_MOVE, highlightCell(this.battlegroundEl)).on(MouseEvent.POINTER_OUT, highlightCell(this.battlegroundEl, true)).empty().append(new west.gui.Scrollpane().appendContent(list).getMainDiv());
 };
 }) ();
 FortBattleWindow.addRecruitRowHover = function (target, player) {
@@ -66147,8 +66175,8 @@ return match !== null ? match[1] : null;
 };
 var getCellIdx = function (e) {
 var pos = $(e.target).offset();
-var x = e.pageX - pos.left;
-var y = e.pageY - pos.top;
+var x = (e.pageX || e.originalEvent.pageX) - pos.left;
+var y = (e.pageY || e.originalEvent.pageY) - pos.top;
 return Math.floor(x / 15) + 34 * Math.floor(y / 15);
 };
 var highlightSector = function (battlegroundEl, sector) {
