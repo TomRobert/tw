@@ -385,1211 +385,11 @@ function br2nl(str) {
 }
 function nl2br(str) {
   return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br />$2');
-}(function () {
-  function g(o) {
-    console.log('$f.fireEvent', [
-    ].slice.call(o))
-  }
-  function k(q) {
-    if (!q || typeof q != 'object') {
-      return q
-    }
-    var o = new q.constructor();
-    for (var p in q) {
-      if (q.hasOwnProperty(p)) {
-        o[p] = k(q[p])
-      }
-    }
-    return o
-  }
-  function m(t, q) {
-    if (!t) {
-      return
-    }
-    var o,
-    p = 0,
-    r = t.length;
-    if (r === undefined) {
-      for (o in t) {
-        if (q.call(t[o], o, t[o]) === false) {
-          break
-        }
-      }
-    } else {
-      for (var s = t[0]; p < r && q.call(s, p, s) !== false; s = t[++p]) {
-      }
-    }
-    return t
-  }
-  function c(o) {
-    return document.getElementById(o)
-  }
-  function i(q, p, o) {
-    if (typeof p != 'object') {
-      return q
-    }
-    if (q && p) {
-      m(p, function (r, s) {
-        if (!o || typeof s != 'function') {
-          q[r] = s
-        }
-      })
-    }
-    return q
-  }
-  function n(s) {
-    var q = s.indexOf('.');
-    if (q != - 1) {
-      var p = s.slice(0, q) || '*';
-      var o = s.slice(q + 1, s.length);
-      var r = [
-      ];
-      m(document.getElementsByTagName(p), function () {
-        if (this.className && this.className.indexOf(o) != - 1) {
-          r.push(this)
-        }
-      });
-      return r
-    }
-  }
-  function f(o) {
-    o = o || window.event;
-    if (o.preventDefault) {
-      o.stopPropagation();
-      o.preventDefault()
-    } else {
-      o.returnValue = false;
-      o.cancelBubble = true
-    }
-    return false
-  }
-  function j(q, o, p) {
-    q[o] = q[o] || [
-    ];
-    q[o].push(p)
-  }
-  function e() {
-    return '_' + ('' + Math.random()).slice(2, 10)
-  }
-  var h = function (t, r, s) {
-    var q = this,
-    p = {
-    },
-    u = {
-    };
-    q.index = r;
-    if (typeof t == 'string') {
-      t = {
-        url: t
-      }
-    }
-    i(this, t, true);
-    m(('Begin*,Start,Pause*,Resume*,Seek*,Stop*,Finish*,LastSecond,Update,BufferFull,BufferEmpty,BufferStop').split(','), function () {
-      var v = 'on' + this;
-      if (v.indexOf('*') != - 1) {
-        v = v.slice(0, v.length - 1);
-        var w = 'onBefore' + v.slice(2);
-        q[w] = function (x) {
-          j(u, w, x);
-          return q
-        }
-      }
-      q[v] = function (x) {
-        j(u, v, x);
-        return q
-      };
-      if (r == - 1) {
-        if (q[w]) {
-          s[w] = q[w]
-        }
-        if (q[v]) {
-          s[v] = q[v]
-        }
-      }
-    });
-    i(this, {
-      onCuepoint: function (x, w) {
-        if (arguments.length == 1) {
-          p.embedded = [
-            null,
-            x
-          ];
-          return q
-        }
-        if (typeof x == 'number') {
-          x = [
-            x
-          ]
-        }
-        var v = e();
-        p[v] = [
-          x,
-          w
-        ];
-        if (s.isLoaded()) {
-          s._api().fp_addCuepoints(x, r, v)
-        }
-        return q
-      },
-      update: function (w) {
-        i(q, w);
-        if (s.isLoaded()) {
-          s._api().fp_updateClip(w, r)
-        }
-        var v = s.getConfig();
-        var x = (r == - 1) ? v.clip : v.playlist[r];
-        i(x, w, true)
-      },
-      _fireEvent: function (v, y, w, A) {
-        if (v == 'onLoad') {
-          m(p, function (B, C) {
-            if (C[0]) {
-              s._api().fp_addCuepoints(C[0], r, B)
-            }
-          });
-          return false
-        }
-        A = A || q;
-        if (v == 'onCuepoint') {
-          var z = p[y];
-          if (z) {
-            return z[1].call(s, A, w)
-          }
-        }
-        if (y && 'onBeforeBegin,onMetaData,onStart,onUpdate,onResume'.indexOf(v) != - 1) {
-          i(A, y);
-          if (y.metaData) {
-            if (!A.duration) {
-              A.duration = y.metaData.duration
-            } else {
-              A.fullDuration = y.metaData.duration
-            }
-          }
-        }
-        var x = true;
-        m(u[v], function () {
-          x = this.call(s, A, y, w)
-        });
-        return x
-      }
-    });
-    if (t.onCuepoint) {
-      var o = t.onCuepoint;
-      q.onCuepoint.apply(q, typeof o == 'function' ? [
-        o
-      ] : o);
-      delete t.onCuepoint
-    }
-    m(t, function (v, w) {
-      if (typeof w == 'function') {
-        j(u, v, w);
-        delete t[v]
-      }
-    });
-    if (r == - 1) {
-      s.onCuepoint = this.onCuepoint
-    }
-  };
-  var l = function (p, r, q, t) {
-    var o = this,
-    s = {
-    },
-    u = false;
-    if (t) {
-      i(s, t)
-    }
-    m(r, function (v, w) {
-      if (typeof w == 'function') {
-        s[v] = w;
-        delete r[v]
-      }
-    });
-    i(this, {
-      animate: function (y, z, x) {
-        if (!y) {
-          return o
-        }
-        if (typeof z == 'function') {
-          x = z;
-          z = 500
-        }
-        if (typeof y == 'string') {
-          var w = y;
-          y = {
-          };
-          y[w] = z;
-          z = 500
-        }
-        if (x) {
-          var v = e();
-          s[v] = x
-        }
-        if (z === undefined) {
-          z = 500
-        }
-        r = q._api().fp_animate(p, y, z, v);
-        return o
-      },
-      css: function (w, x) {
-        if (x !== undefined) {
-          var v = {
-          };
-          v[w] = x;
-          w = v
-        }
-        r = q._api().fp_css(p, w);
-        i(o, r);
-        return o
-      },
-      show: function () {
-        this.display = 'block';
-        q._api().fp_showPlugin(p);
-        return o
-      },
-      hide: function () {
-        this.display = 'none';
-        q._api().fp_hidePlugin(p);
-        return o
-      },
-      toggle: function () {
-        this.display = q._api().fp_togglePlugin(p);
-        return o
-      },
-      fadeTo: function (y, x, w) {
-        if (typeof x == 'function') {
-          w = x;
-          x = 500
-        }
-        if (w) {
-          var v = e();
-          s[v] = w
-        }
-        this.display = q._api().fp_fadeTo(p, y, x, v);
-        this.opacity = y;
-        return o
-      },
-      fadeIn: function (w, v) {
-        return o.fadeTo(1, w, v)
-      },
-      fadeOut: function (w, v) {
-        return o.fadeTo(0, w, v)
-      },
-      getName: function () {
-        return p
-      },
-      getPlayer: function () {
-        return q
-      },
-      _fireEvent: function (w, v, x) {
-        if (w == 'onUpdate') {
-          var z = q._api().fp_getPlugin(p);
-          if (!z) {
-            return
-          }
-          i(o, z);
-          delete o.methods;
-          if (!u) {
-            m(z.methods, function () {
-              var B = '' + this;
-              o[B] = function () {
-                var C = [
-                ].slice.call(arguments);
-                var D = q._api().fp_invoke(p, B, C);
-                return D === 'undefined' || D === undefined ? o : D
-              }
-            });
-            u = true
-          }
-        }
-        var A = s[w];
-        if (A) {
-          var y = A.apply(o, v);
-          if (w.slice(0, 1) == '_') {
-            delete s[w]
-          }
-          return y
-        }
-        return o
-      }
-    })
-  };
-  function b(q, G, t) {
-    var w = this,
-    v = null,
-    D = false,
-    u,
-    s,
-    F = [
-    ],
-    y = {
-    },
-    x = {
-    },
-    E,
-    r,
-    p,
-    C,
-    o,
-    A;
-    i(w, {
-      id: function () {
-        return E
-      },
-      isLoaded: function () {
-        return (v !== null && v.fp_play !== undefined && !D)
-      },
-      getParent: function () {
-        return q
-      },
-      hide: function (H) {
-        if (H) {
-          q.style.height = '0px'
-        }
-        if (w.isLoaded()) {
-          v.style.height = '0px'
-        }
-        return w
-      },
-      show: function () {
-        q.style.height = A + 'px';
-        if (w.isLoaded()) {
-          v.style.height = o + 'px'
-        }
-        return w
-      },
-      isHidden: function () {
-        return w.isLoaded() && parseInt(v.style.height, 10) === 0
-      },
-      load: function (J) {
-        if (!w.isLoaded() && w._fireEvent('onBeforeLoad') !== false) {
-          var H = function () {
-            u = q.innerHTML;
-            if (u && !flashembed.isSupported(G.version)) {
-              q.innerHTML = ''
-            }
-            if (J) {
-              J.cached = true;
-              j(x, 'onLoad', J)
-            }
-            flashembed(q, G, {
-              config: t
-            })
-          };
-          var I = 0;
-          m(a, function () {
-            this.unload(function (K) {
-              if (++I == a.length) {
-                H()
-              }
-            })
-          })
-        }
-        return w
-      },
-      unload: function (J) {
-        if (this.isFullscreen() && /WebKit/i.test(navigator.userAgent)) {
-          if (J) {
-            J(false)
-          }
-          return w
-        }
-        if (u.replace(/\s/g, '') !== '') {
-          if (w._fireEvent('onBeforeUnload') === false) {
-            if (J) {
-              J(false)
-            }
-            return w
-          }
-          D = true;
-          try {
-            if (v) {
-              v.fp_close();
-              w._fireEvent('onUnload')
-            }
-          } catch (H) {
-          }
-          var I = function () {
-            v = null;
-            q.innerHTML = u;
-            D = false;
-            if (J) {
-              J(true)
-            }
-          };
-          setTimeout(I, 50)
-        } else {
-          if (J) {
-            J(false)
-          }
-        }
-        return w
-      },
-      getClip: function (H) {
-        if (H === undefined) {
-          H = C
-        }
-        return F[H]
-      },
-      getCommonClip: function () {
-        return s
-      },
-      getPlaylist: function () {
-        return F
-      },
-      getPlugin: function (H) {
-        var J = y[H];
-        if (!J && w.isLoaded()) {
-          var I = w._api().fp_getPlugin(H);
-          if (I) {
-            J = new l(H, I, w);
-            y[H] = J
-          }
-        }
-        return J
-      },
-      getScreen: function () {
-        return w.getPlugin('screen')
-      },
-      getControls: function () {
-        return w.getPlugin('controls')._fireEvent('onUpdate')
-      },
-      getLogo: function () {
-        try {
-          return w.getPlugin('logo')._fireEvent('onUpdate')
-        } catch (H) {
-        }
-      },
-      getPlay: function () {
-        return w.getPlugin('play')._fireEvent('onUpdate')
-      },
-      getConfig: function (H) {
-        return H ? k(t)  : t
-      },
-      getFlashParams: function () {
-        return G
-      },
-      loadPlugin: function (K, J, M, L) {
-        if (typeof M == 'function') {
-          L = M;
-          M = {
-          }
-        }
-        var I = L ? e()  : '_';
-        w._api().fp_loadPlugin(K, J, M, I);
-        var H = {
-        };
-        H[I] = L;
-        var N = new l(K, null, w, H);
-        y[K] = N;
-        return N
-      },
-      getState: function () {
-        return w.isLoaded() ? v.fp_getState()  : - 1
-      },
-      play: function (I, H) {
-        var J = function () {
-          if (I !== undefined) {
-            w._api().fp_play(I, H)
-          } else {
-            w._api().fp_play()
-          }
-        };
-        if (w.isLoaded()) {
-          J()
-        } else {
-          if (D) {
-            setTimeout(function () {
-              w.play(I, H)
-            }, 50)
-          } else {
-            w.load(function () {
-              J()
-            })
-          }
-        }
-        return w
-      },
-      getVersion: function () {
-        var I = 'flowplayer.js 3.2.6';
-        if (w.isLoaded()) {
-          var H = v.fp_getVersion();
-          H.push(I);
-          return H
-        }
-        return I
-      },
-      _api: function () {
-        if (!w.isLoaded()) {
-          throw 'Flowplayer ' + w.id() + ' not loaded when calling an API method'
-        }
-        return v
-      },
-      setClip: function (H) {
-        w.setPlaylist([H]);
-        return w
-      },
-      getIndex: function () {
-        return p
-      },
-      _swfHeight: function () {
-        return v.clientHeight
-      }
-    });
-    m(('Click*,Load*,Unload*,Keypress*,Volume*,Mute*,Unmute*,PlaylistReplace,ClipAdd,Fullscreen*,FullscreenExit,Error,MouseOver,MouseOut').split(','), function () {
-      var H = 'on' + this;
-      if (H.indexOf('*') != - 1) {
-        H = H.slice(0, H.length - 1);
-        var I = 'onBefore' + H.slice(2);
-        w[I] = function (J) {
-          j(x, I, J);
-          return w
-        }
-      }
-      w[H] = function (J) {
-        j(x, H, J);
-        return w
-      }
-    });
-    m(('pause,resume,mute,unmute,stop,toggle,seek,getStatus,getVolume,setVolume,getTime,isPaused,isPlaying,startBuffering,stopBuffering,isFullscreen,toggleFullscreen,reset,close,setPlaylist,addClip,playFeed,setKeyboardShortcutsEnabled,isKeyboardShortcutsEnabled').split(','), function () {
-      var H = this;
-      w[H] = function (J, I) {
-        if (!w.isLoaded()) {
-          return w
-        }
-        var K = null;
-        if (J !== undefined && I !== undefined) {
-          K = v['fp_' + H](J, I)
-        } else {
-          K = (J === undefined) ? v['fp_' + H]()  : v['fp_' + H](J)
-        }
-        return K === 'undefined' || K === undefined ? w : K
-      }
-    });
-    w._fireEvent = function (Q) {
-      if (typeof Q == 'string') {
-        Q = [
-          Q
-        ]
-      }
-      var R = Q[0],
-      O = Q[1],
-      M = Q[2],
-      L = Q[3],
-      K = 0;
-      if (t.debug) {
-        g(Q)
-      }
-      if (!w.isLoaded() && R == 'onLoad' && O == 'player') {
-        v = v || c(r);
-        o = w._swfHeight();
-        m(F, function () {
-          this._fireEvent('onLoad')
-        });
-        m(y, function (S, T) {
-          T._fireEvent('onUpdate')
-        });
-        s._fireEvent('onLoad')
-      }
-      if (R == 'onLoad' && O != 'player') {
-        return
-      }
-      if (R == 'onError') {
-        if (typeof O == 'string' || (typeof O == 'number' && typeof M == 'number')) {
-          O = M;
-          M = L
-        }
-      }
-      if (R == 'onContextMenu') {
-        m(t.contextMenu[O], function (S, T) {
-          T.call(w)
-        });
-        return
-      }
-      if (R == 'onPluginEvent' || R == 'onBeforePluginEvent') {
-        var H = O.name || O;
-        var I = y[H];
-        if (I) {
-          I._fireEvent('onUpdate', O);
-          return I._fireEvent(M, Q.slice(3))
-        }
-        return
-      }
-      if (R == 'onPlaylistReplace') {
-        F = [
-        ];
-        var N = 0;
-        m(O, function () {
-          F.push(new h(this, N++, w))
-        })
-      }
-      if (R == 'onClipAdd') {
-        if (O.isInStream) {
-          return
-        }
-        O = new h(O, M, w);
-        F.splice(M, 0, O);
-        for (K = M + 1; K < F.length; K++) {
-          F[K].index++
-        }
-      }
-      var P = true;
-      if (typeof O == 'number' && O < F.length) {
-        C = O;
-        var J = F[O];
-        if (J) {
-          P = J._fireEvent(R, M, L)
-        }
-        if (!J || P !== false) {
-          P = s._fireEvent(R, M, L, J)
-        }
-      }
-      m(x[R], function () {
-        P = this.call(w, O, M);
-        if (this.cached) {
-          x[R].splice(K, 1)
-        }
-        if (P === false) {
-          return false
-        }
-        K++
-      });
-      return P
-    };
-    function B() {
-      if ($f(q)) {
-        $f(q).getParent().innerHTML = '';
-        p = $f(q).getIndex();
-        a[p] = w
-      } else {
-        a.push(w);
-        p = a.length - 1
-      }
-      A = parseInt(q.style.height, 10) || q.clientHeight;
-      E = q.id || 'fp' + e();
-      r = G.id || E + '_api';
-      G.id = r;
-      t.playerId = E;
-      if (typeof t == 'string') {
-        t = {
-          clip: {
-            url: t
-          }
-        }
-      }
-      if (typeof t.clip == 'string') {
-        t.clip = {
-          url: t.clip
-        }
-      }
-      t.clip = t.clip || {
-      };
-      if (q.getAttribute('href', 2) && !t.clip.url) {
-        t.clip.url = q.getAttribute('href', 2)
-      }
-      s = new h(t.clip, - 1, w);
-      t.playlist = t.playlist || [
-        t.clip
-      ];
-      var I = 0;
-      m(t.playlist, function () {
-        var K = this;
-        if (typeof K == 'object' && K.length) {
-          K = {
-            url: '' + K
-          }
-        }
-        m(t.clip, function (L, M) {
-          if (M !== undefined && K[L] === undefined && typeof M != 'function') {
-            K[L] = M
-          }
-        });
-        t.playlist[I] = K;
-        K = new h(K, I, w);
-        F.push(K);
-        I++
-      });
-      m(t, function (K, L) {
-        if (typeof L == 'function') {
-          if (s[K]) {
-            s[K](L)
-          } else {
-            j(x, K, L)
-          }
-          delete t[K]
-        }
-      });
-      m(t.plugins, function (K, L) {
-        if (L) {
-          y[K] = new l(K, L, w)
-        }
-      });
-      if (!t.plugins || t.plugins.controls === undefined) {
-        y.controls = new l('controls', null, w)
-      }
-      y.canvas = new l('canvas', null, w);
-      u = q.innerHTML;
-      function J(L) {
-        var K = w.hasiPadSupport && w.hasiPadSupport();
-        if (/iPad|iPhone|iPod/i.test(navigator.userAgent) && !/.flv$/i.test(F[0].url) && !K) {
-          return true
-        }
-        if (!w.isLoaded() && w._fireEvent('onBeforeClick') !== false) {
-          w.load()
-        }
-        return f(L)
-      }
-      function H() {
-        if (u.replace(/\s/g, '') !== '') {
-          if (q.addEventListener) {
-            q.addEventListener('click', J, false)
-          } else {
-            if (q.attachEvent) {
-              q.attachEvent('onclick', J)
-            }
-          }
-        } else {
-          if (q.addEventListener) {
-            q.addEventListener('click', f, false)
-          }
-          w.load()
-        }
-      }
-      setTimeout(H, 0)
-    }
-    if (typeof q == 'string') {
-      var z = c(q);
-      if (!z) {
-        throw 'Flowplayer cannot access element: ' + q
-      }
-      q = z;
-      B()
-    } else {
-      B()
-    }
-  }
-  var a = [
-  ];
-  function d(o) {
-    this.length = o.length;
-    this.each = function (p) {
-      m(o, p)
-    };
-    this.size = function () {
-      return o.length
-    }
-  }
-  window.flowplayer = window.$f = function () {
-    var p = null;
-    var o = arguments[0];
-    if (!arguments.length) {
-      m(a, function () {
-        if (this.isLoaded()) {
-          p = this;
-          return false
-        }
-      });
-      return p || a[0]
-    }
-    if (arguments.length == 1) {
-      if (typeof o == 'number') {
-        return a[o]
-      } else {
-        if (o == '*') {
-          return new d(a)
-        }
-        m(a, function () {
-          if (this.id() == o.id || this.id() == o || this.getParent() == o) {
-            p = this;
-            return false
-          }
-        });
-        return p
-      }
-    }
-    if (arguments.length > 1) {
-      var t = arguments[1],
-      q = (arguments.length == 3) ? arguments[2] : {
-      };
-      if (typeof t == 'string') {
-        t = {
-          src: t
-        }
-      }
-      t = i({
-        bgcolor: '#000000',
-        version: [
-          9,
-          0
-        ],
-        expressInstall: 'http://static.flowplayer.org/swf/expressinstall.swf',
-        cachebusting: false
-      }, t);
-      if (typeof o == 'string') {
-        if (o.indexOf('.') != - 1) {
-          var s = [
-          ];
-          m(n(o), function () {
-            s.push(new b(this, k(t), k(q)))
-          });
-          return new d(s)
-        } else {
-          var r = c(o);
-          return new b(r !== null ? r : o, t, q)
-        }
-      } else {
-        if (o) {
-          return new b(o, t, q)
-        }
-      }
-    }
-    return null
-  };
-  i(window.$f, {
-    fireEvent: function () {
-      var o = [
-      ].slice.call(arguments);
-      var q = $f(o[0]);
-      return q ? q._fireEvent(o.slice(1))  : null
-    },
-    addPlugin: function (o, p) {
-      b.prototype[o] = p;
-      return $f
-    },
-    each: m,
-    extend: i
-  });
-  if (typeof jQuery == 'function') {
-    jQuery.fn.flowplayer = function (q, p) {
-      if (!arguments.length || typeof arguments[0] == 'number') {
-        var o = [
-        ];
-        this.each(function () {
-          var r = $f(this);
-          if (r) {
-            o.push(r)
-          }
-        });
-        return arguments.length ? o[arguments[0]] : new d(o)
-      }
-      return this.each(function () {
-        $f(this, k(q), p ? k(p)  : {
-        })
-      })
-    }
-  }
-}) ();
-(function () {
-  var e = typeof jQuery == 'function';
-  var i = {
-    width: '100%',
-    height: '100%',
-    allowfullscreen: true,
-    allowscriptaccess: 'always',
-    quality: 'high',
-    version: null,
-    onFail: null,
-    expressInstall: null,
-    w3c: false,
-    cachebusting: false
-  };
-  if (e) {
-    jQuery.tools = jQuery.tools || {
-    };
-    jQuery.tools.flashembed = {
-      version: '1.0.4',
-      conf: i
-    }
-  }
-  function j() {
-    if (c.done) {
-      return false
-    }
-    var l = document;
-    if (l && l.getElementsByTagName && l.getElementById && l.body) {
-      clearInterval(c.timer);
-      c.timer = null;
-      for (var k = 0; k < c.ready.length; k++) {
-        c.ready[k].call()
-      }
-      c.ready = null;
-      c.done = true
-    }
-  }
-  var c = e ? jQuery : function (k) {
-    if (c.done) {
-      return k()
-    }
-    if (c.timer) {
-      c.ready.push(k)
-    } else {
-      c.ready = [
-        k
-      ];
-      c.timer = setInterval(j, 13)
-    }
-  };
-  function f(l, k) {
-    if (k) {
-      for (key in k) {
-        if (k.hasOwnProperty(key)) {
-          l[key] = k[key]
-        }
-      }
-    }
-    return l
-  }
-  function g(k) {
-    switch (h(k)) {
-      case 'string':
-        k = k.replace(new RegExp('(["\\\\])', 'g'), '\\$1');
-        k = k.replace(/^\s?(\d+)%/, '$1pct');
-        return '"' + k + '"';
-      case 'array':
-        return '[' + b(k, function (n) {
-          return g(n)
-        }).join(',') + ']';
-      case 'function':
-        return '"function()"';
-      case 'object':
-        var l = [
-        ];
-        for (var m in k) {
-          if (k.hasOwnProperty(m)) {
-            l.push('"' + m + '":' + g(k[m]))
-          }
-        }
-        return '{' + l.join(',') + '}'
-    }
-    return String(k).replace(/\s/g, ' ').replace(/\'/g, '"')
-  }
-  function h(l) {
-    if (l === null || l === undefined) {
-      return false
-    }
-    var k = typeof l;
-    return (k == 'object' && l.push) ? 'array' : k
-  }
-  if (window.attachEvent) {
-    window.attachEvent('onbeforeunload', function () {
-      __flash_unloadHandler = function () {
-      };
-      __flash_savedUnloadHandler = function () {
-      }
-    })
-  }
-  function b(k, n) {
-    var m = [
-    ];
-    for (var l in k) {
-      if (k.hasOwnProperty(l)) {
-        m[l] = n(k[l])
-      }
-    }
-    return m
-  }
-  function a(r, t) {
-    var q = f({
-    }, r);
-    var s = document.all;
-    var n = '<object width="' + q.width + '" height="' + q.height + '"';
-    if (s && !q.id) {
-      q.id = '_' + ('' + Math.random()).substring(9)
-    }
-    if (q.id) {
-      n += ' id="' + q.id + '"'
-    }
-    if (q.cachebusting) {
-      q.src += ((q.src.indexOf('?') != - 1 ? '&' : '?') + Math.random())
-    }
-    if (q.w3c || !s) {
-      n += ' data="' + q.src + '" type="application/x-shockwave-flash"'
-    } else {
-      n += ' classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"'
-    }
-    n += '>';
-    if (q.w3c || s) {
-      n += '<param name="movie" value="' + q.src + '" />'
-    }
-    q.width = q.height = q.id = q.w3c = q.src = null;
-    for (var l in q) {
-      if (q[l] !== null) {
-        n += '<param name="' + l + '" value="' + q[l] + '" />'
-      }
-    }
-    var o = '';
-    if (t) {
-      for (var m in t) {
-        if (t[m] !== null) {
-          o += m + '=' + (typeof t[m] == 'object' ? g(t[m])  : t[m]) + '&'
-        }
-      }
-      o = o.substring(0, o.length - 1);
-      n += '<param name="flashvars" value=\'' + o + '\' />'
-    }
-    n += '</object>';
-    return n
-  }
-  function d(m, p, l) {
-    var k = flashembed.getVersion();
-    f(this, {
-      getContainer: function () {
-        return m
-      },
-      getConf: function () {
-        return p
-      },
-      getVersion: function () {
-        return k
-      },
-      getFlashvars: function () {
-        return l
-      },
-      getApi: function () {
-        return m.firstChild
-      },
-      getHTML: function () {
-        return a(p, l)
-      }
-    });
-    var q = p.version;
-    var r = p.expressInstall;
-    var o = !q || flashembed.isSupported(q);
-    if (o) {
-      p.onFail = p.version = p.expressInstall = null;
-      m.innerHTML = a(p, l)
-    } else {
-      if (q && r && flashembed.isSupported([6,
-      65])) {
-        f(p, {
-          src: r
-        });
-        l = {
-          MMredirectURL: location.href,
-          MMplayerType: 'PlugIn',
-          MMdoctitle: document.title
-        };
-        m.innerHTML = a(p, l)
-      } else {
-        if (m.innerHTML.replace(/\s/g, '') !== '') {
-        } else {
-          m.innerHTML = '<h2>Flash version ' + q + ' or greater is required</h2><h3>' + (k[0] > 0 ? 'Your version is ' + k : 'You have no flash plugin installed') + '</h3>' + (m.tagName == 'A' ? '<p>Click here to download latest version</p>' : '<p>Download latest version from <a href=\'http://www.adobe.com/go/getflashplayer\'>here</a></p>');
-          if (m.tagName == 'A') {
-            m.onclick = function () {
-              location.href = 'http://www.adobe.com/go/getflashplayer'
-            }
-          }
-        }
-      }
-    }
-    if (!o && p.onFail) {
-      var n = p.onFail.call(this);
-      if (typeof n == 'string') {
-        m.innerHTML = n
-      }
-    }
-    if (document.all) {
-      window[p.id] = document.getElementById(p.id)
-    }
-  }
-  window.flashembed = function (l, m, k) {
-    if (typeof l == 'string') {
-      var n = document.getElementById(l);
-      if (n) {
-        l = n
-      } else {
-        c(function () {
-          flashembed(l, m, k)
-        });
-        return
-      }
-    }
-    if (!l) {
-      return
-    }
-    if (typeof m == 'string') {
-      m = {
-        src: m
-      }
-    }
-    var o = f({
-    }, i);
-    f(o, m);
-    return new d(l, o, k)
-  };
-  f(window.flashembed, {
-    getVersion: function () {
-      var m = [
-        0,
-        0
-      ];
-      if (navigator.plugins && typeof navigator.plugins['Shockwave Flash'] == 'object') {
-        var l = navigator.plugins['Shockwave Flash'].description;
-        if (typeof l != 'undefined') {
-          l = l.replace(/^.*\s+(\S+\s+\S+$)/, '$1');
-          var n = parseInt(l.replace(/^(.*)\..*$/, '$1'), 10);
-          var r = /r/.test(l) ? parseInt(l.replace(/^.*r(.*)$/, '$1'), 10)  : 0;
-          m = [
-            n,
-            r
-          ]
-        }
-      } else {
-        if (window.ActiveXObject) {
-          try {
-            var p = new ActiveXObject('ShockwaveFlash.ShockwaveFlash.7')
-          } catch (q) {
-            try {
-              p = new ActiveXObject('ShockwaveFlash.ShockwaveFlash.6');
-              m = [
-                6,
-                0
-              ];
-              p.AllowScriptAccess = 'always'
-            } catch (k) {
-              if (m[0] == 6) {
-                return m
-              }
-            }
-            try {
-              p = new ActiveXObject('ShockwaveFlash.ShockwaveFlash')
-            } catch (o) {
-            }
-          }
-          if (typeof p == 'object') {
-            l = p.GetVariable('$version');
-            if (typeof l != 'undefined') {
-              l = l.replace(/^\S+\s+(.*)$/, '$1').split(',');
-              m = [
-                parseInt(l[0], 10),
-                parseInt(l[2], 10)
-              ]
-            }
-          }
-        }
-      }
-      return m
-    },
-    isSupported: function (k) {
-      var m = flashembed.getVersion();
-      var l = (m[0] > k[0]) || (m[0] == k[0] && m[1] >= k[1]);
-      return l
-    },
-    domReady: c,
-    asString: g,
-    getHTML: a
-  });
-  if (e) {
-    jQuery.fn.flashembed = function (l, k) {
-      var m = null;
-      this.each(function () {
-        m = flashembed(this, l, k)
-      });
-      return l.api === false ? this : m
-    }
-  }
-}) (); function getRandomInt(min, max) {
+}
+function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}; function getRandomSequence(min, max) {
+};
+function getRandomSequence(min, max) {
   var tmp = [
   ];
   var seq = [
@@ -1599,7 +399,8 @@ function nl2br(str) {
     seq.push(tmp.splice(getRandomInt(0, tmp.length - 1), 1) [0]);
   } while (0 < tmp.length);
   return seq;
-}; function getRandomString(length) {
+};
+function getRandomString(length) {
   return new Array(length).join().replace(/(.|$)/g, function () {
     return ((Math.random() * 26) | 0 + 10).toString(36);
   });
@@ -1623,9 +424,11 @@ function buildDateObject(timeStr, isServerTime) {
     d = new Date(d - Game.serverTimeDifference);
   }
   return d;
-}; function buildTimestamp(timeStr, isServerTime) {
+};
+function buildTimestamp(timeStr, isServerTime) {
   return buildDateObject(timeStr, isServerTime).getTime();
-}; west.namespace('west.common', {
+};
+west.namespace('west.common', {
   forEach: function (obj, cb, context, include) {
     var value;
     for (var i in obj) {
@@ -1715,7 +518,8 @@ function buildDateObject(timeStr, isServerTime) {
     }
     return array;
   }
-}); function readCookie(name) {
+});
+function readCookie(name) {
   var nameEQ = escape(name) + '=';
   var ca = document.cookie.split(';');
   for (var i = 0; i < ca.length; i++) {
@@ -1733,13 +537,15 @@ Date.prototype.toTime = function () {
   this.getMinutes().zerofill(2),
   ':',
   this.getSeconds().zerofill(2)].join('');
-}; Date.prototype.toDateString = function () {
+};
+Date.prototype.toDateString = function () {
   return [this.getDate().zerofill(2),
   '-',
   (parseInt(this.getMonth()) + 1).zerofill(2),
   '-',
   this.getFullYear()].join('');
-}; Date.prototype.toDateTimeString = function () {
+};
+Date.prototype.toDateTimeString = function () {
   return [this.getDate().zerofill(2),
   '-',
   (parseInt(this.getMonth()) + 1).zerofill(2),
@@ -1750,7 +556,8 @@ Date.prototype.toTime = function () {
   this.getMinutes().zerofill(2),
   ':',
   this.getSeconds().zerofill(2)].join('');
-}; Date.prototype.toDateTimeStringNice = function () {
+};
+Date.prototype.toDateTimeStringNice = function () {
   var timestamp = this.getTime();
   var withinSameDay = function (timestamp) {
     var now = new Date(),
@@ -1764,7 +571,8 @@ Date.prototype.toTime = function () {
     return s('Tomorrow at %1', this.toTime());
   }
   return s('On %1 at %2', this.toDateString(), this.toTime());
-}; Date.prototype.locale = {
+};
+Date.prototype.locale = {
   dayNames: [
     'Sunday',
     'Monday',
@@ -1774,17 +582,21 @@ Date.prototype.toTime = function () {
     'Friday',
     'Saturday'
   ]
-}; Date.prototype.getLocalDay = function () {
+};
+Date.prototype.getLocalDay = function () {
   return this.locale.dayNames[this.getDay()];
-}; Date.prototype.isWinterTime = function () {
+};
+Date.prototype.isWinterTime = function () {
   var y1 = this.getFullYear();
   var y2 = this.getFullYear();
   (this.getMonth() + 1) < 12 ? y1 = this.getFullYear() - 1 : y2 = this.getFullYear() + 1;
   return (this >= Date.parse('Dec 01, ' + y1) && this <= Date.parse('Jan 10, ' + y2));
-}; Date.prototype.getWeekdayNo = function () {
+};
+Date.prototype.getWeekdayNo = function () {
   var dayNo = this.getDay();
   return dayNo > 0 ? dayNo - 1 : 6;
-}; Date.prototype.setPartialYear = function (year) {
+};
+Date.prototype.setPartialYear = function (year) {
   if (year < 100) {
     if (year < 70)
     year += 2000;
@@ -1792,7 +604,8 @@ Date.prototype.toTime = function () {
     year += 1900;
   }
   return this.setFullYear(year);
-}; if (!Date.now) {
+};
+if (!Date.now) {
   Date.now = function now() {
     return new Date().getTime();
   };
@@ -1800,11 +613,14 @@ Date.prototype.toTime = function () {
 function ServerDate() {
   this.date = new Date();
   this.date.setTime(this.date.getTime() - Game.clientTimedrift);
-}; ServerDate.prototype.setTime = function (time) {
+};
+ServerDate.prototype.setTime = function (time) {
   return this.date.setTime(time);
-}; ServerDate.prototype.getTime = function () {
+};
+ServerDate.prototype.getTime = function () {
   return this.date.getTime();
-}; if (!Function.prototype.bind) {
+};
+if (!Function.prototype.bind) {
   Function.prototype.bind = function () {
     if ('function' !== typeof (this)) {
       return this;
@@ -1825,7 +641,8 @@ function ServerDate() {
 Array.prototype.rar = function (index) {
   var retval = this[index];
   this.splice(index, 1);
-}; if (!Array.prototype.forEach) {
+};
+if (!Array.prototype.forEach) {
   Array.prototype.forEach = function (callback, thisArg) {
     var T,
     k,
@@ -1853,7 +670,8 @@ Array.prototype.rar = function (index) {
     }
   };
 }
-Array.prototype.each = Array.prototype.forEach; if (!Array.prototype.map) {
+Array.prototype.each = Array.prototype.forEach;
+if (!Array.prototype.map) {
   Array.prototype.map = function (callback, thisArg) {
     var T,
     A,
@@ -1919,7 +737,8 @@ if (!Array.prototype.some) {
 Array.prototype.shuffle = function () {
   for (var j, x, i = this.length; i; j = Math.floor(Math.random() * i), x = this[--i], this[i] = this[j], this[j] = x);
   return this;
-}; if (!Array.prototype.every) {
+};
+if (!Array.prototype.every) {
   Array.prototype.every = function (callbackfn, thisArg) {
     'use strict';
     var T,
@@ -2022,7 +841,8 @@ if (!Object.keys) {
       return result;
     };
   }());
-}; Number.prototype.zerofill = function (len) {
+};
+Number.prototype.zerofill = function (len) {
   if (!isDefined(len)) {
     len = 2;
   }
@@ -2031,12 +851,14 @@ if (!Object.keys) {
     tmp = '0' + tmp;
   }
   return tmp;
-}; Number.prototype.formatDuration = function () {
+};
+Number.prototype.formatDuration = function () {
   var hours = Math.floor(this / 3600);
   var minutes = Math.floor(this / 60 - hours * 60);
   var seconds = Math.floor(this % 60);
   return hours.zerofill() + ':' + minutes.zerofill() + ':' + seconds.zerofill();
-}; Number.prototype.formatDurationBuffWay = function () {
+};
+Number.prototype.formatDurationBuffWay = function () {
   var days = Math.floor(this / 3600 / 24);
   var hours = Math.floor(this / 3600 - days * 24);
   var minutes = Math.floor(this / 60 - hours * 60);
@@ -2050,12 +872,14 @@ if (!Object.keys) {
     ret = (minutes ? minutes + 'm' : '') + (minutes && seconds ? ' ' : '') + (seconds ? seconds + 's' : '');
   }
   return ret;
-}; Number.prototype.formatDurationWorkProgress = function () {
+};
+Number.prototype.formatDurationWorkProgress = function () {
   var hours = Math.floor(this / 3600);
   var minutes = Math.floor(this / 60 - hours * 60);
   var seconds = Math.floor(this % 60);
   return hours > 0 ? hours + 'h' + ' ' + minutes + 'm' : minutes > 10 ? minutes + ' ' + 'm' : minutes.zerofill() + ':' + seconds.zerofill();
-}; Number.prototype.formatBignum = function () {
+};
+Number.prototype.formatBignum = function () {
   var unit = [
     'T',
     'G',
@@ -2069,7 +893,8 @@ if (!Object.keys) {
     unit.pop();
   }
   return Math.floor(out) + unit[unit.length - 1];
-}; Number.prototype.timestamp2TimeObject = function ()
+};
+Number.prototype.timestamp2TimeObject = function ()
 {
   var rest = this
   var formattedTime = {
@@ -2138,7 +963,8 @@ Number.prototype.getTime2EndString = function (noch)
   return s(txt(result.seconds), result.seconds, l10n.second(result.seconds));
    else
   return l10n['default'];
-}; Number.prototype.getTimeString4Timestamp = function ()
+};
+Number.prototype.getTimeString4Timestamp = function ()
 {
   var result = this.timestamp2TimeObject();
   if (this <= 0)
@@ -2172,7 +998,8 @@ Number.prototype.getTime2EndToken = function (timeOverString) {
   if (txt.length == 0)
   return timeOverString ? timeOverString.escapeHTML()  : 'Ends';
   return txt.join(' ');
-}; Number.prototype.getTime2EndShort = function (timeOverString) {
+};
+Number.prototype.getTime2EndShort = function (timeOverString) {
   var timestamp = this;
   var result = timestamp.timestamp2TimeObject();
   var txt = [
@@ -2197,13 +1024,16 @@ Number.prototype.getTime2EndToken = function (timeOverString) {
     }
   }
   return txt.length > 1 ? txt.join(':')  : txt[0];
-}; Number.prototype.getFormattedTimeString4Timestamp = function ()
+};
+Number.prototype.getFormattedTimeString4Timestamp = function ()
 {
   return new Date(parseInt(this) * 1000).toDateTimeString();
-}; Number.prototype.getLocaleFormattedTime4Timestamp = function ()
+};
+Number.prototype.getLocaleFormattedTime4Timestamp = function ()
 {
   return new Date(parseInt(this) * 1000).toLocaleString();
-}; String.prototype.shuffle = function () {
+};
+String.prototype.shuffle = function () {
   var ls = [
   ],
   i,
@@ -4383,12 +3213,7 @@ Ajax = function () {
       contents = this.$('div.tw2gui_progressbar_contents', this.divMain);
       fill = this.$('div.tw2gui_progressbar_fill', this.divMain);
       if (null != this.maxValue && null != this.value) {
-        if ($.browser.msie && $.browser.version <= 8)
         fill.css('width', calc + '%');
-         else
-        {
-          fill.css('width', calc + '%');
-        }
       }
       contents.empty();
       var v = this.value,
@@ -4906,13 +3731,11 @@ Ajax = function () {
     },
     showLoader: function () {
       $('.tw2gui_window_pane > .loader', this.divMain).show();
-      if (!($.browser.msie && $.browser.version <= 8))
       $('div.tw2gui_window_content_pane', this.divMain).css('opacity', '0.5');
     },
     hideLoader: function () {
       $('.tw2gui_window_pane > .loader', this.divMain).hide();
       $('.tw2gui_window_tab.loading', this.divMain).removeClass('loading');
-      if (!($.browser.msie && $.browser.version <= 8))
       $('div.tw2gui_window_content_pane', this.divMain).css('opacity', '1.0');
     },
     addEventListener: function (etype, handler, context, data) {
@@ -9291,14 +8114,14 @@ west.define('west.storage.FriendsBar', null, {
     },
     _removeClass: $.fn.removeClass,
     removeClass: function (classNames, speed, easing, callback) {
-      return speed ? $.effects.animateClass.apply(this, [
+      return arguments.length > 1 ? $.effects.animateClass.apply(this, [
         {
           remove: classNames
         },
         speed,
         easing,
         callback
-      ])  : this._removeClass(classNames);
+      ])  : this._removeClass.apply(this, arguments);
     },
     _toggleClass: $.fn.toggleClass,
     toggleClass: function (classNames, force, speed, easing, callback) {
@@ -9575,112 +8398,176 @@ west.define('west.storage.FriendsBar', null, {
       }
     });
   }
-}) (jQuery);
-; (function () {
-  $.fn.wheel = function (fn) {
-    return this[fn ? 'bind' : 'trigger']('wheel', fn);
-  };
-  $.event.special.wheel = {
-    setup: function () {
-      $.event.add(this, wheelEvents, wheelHandler, {
-      });
-    },
-    teardown: function () {
-      $.event.remove(this, wheelEvents, wheelHandler);
-    }
-  };
-  var wheelEvents = !$.browser.mozilla ? 'mousewheel' : 'DOMMouseScroll' + ($.browser.version < '1.9' ? ' mousemove' : '');
-  function wheelHandler(event) {
-    switch (event.type) {
-      case 'mousemove':
-        return $.extend(event.data, {
-          clientX: event.clientX,
-          clientY: event.clientY,
-          pageX: event.pageX,
-          pageY: event.pageY
-        });
-      case 'DOMMouseScroll':
-        $.extend(event, event.data);
-        event.delta = - event.detail / 3;
-        break;
-      case 'mousewheel':
-        event.delta = event.wheelDelta / 120;
-        if ($.browser.opera && $.browser.version < 9.2) event.delta *= - 1;
-        break;
-    }
-    event.type = 'wheel';
-    return $.event.handle.call(this, event, event.delta);
-  };
-}) ();
-; (function ($) {
-  var types = [
+}) (jQuery); (function (factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['jquery'], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory;
+  } else {
+    factory(jQuery);
+  }
+}(function ($) {
+  var toFix = [
+    'wheel',
+    'mousewheel',
     'DOMMouseScroll',
-    'mousewheel'
-  ];
+    'MozMousePixelScroll'
+  ],
+  toBind = ('onwheel' in document || document.documentMode >= 9) ? [
+    'wheel'
+  ] : [
+    'mousewheel',
+    'DomMouseScroll',
+    'MozMousePixelScroll'
+  ],
+  slice = Array.prototype.slice,
+  nullLowestDeltaTimeout,
+  lowestDelta;
   if ($.event.fixHooks) {
-    for (var i = types.length; i; ) {
-      $.event.fixHooks[types[--i]] = $.event.mouseHooks;
+    for (var i = toFix.length; i; ) {
+      $.event.fixHooks[toFix[--i]] = $.event.mouseHooks;
     }
   }
-  $.event.special.mousewheel = {
+  var special = $.event.special.mousewheel = {
+    version: '3.1.12',
     setup: function () {
       if (this.addEventListener) {
-        for (var i = types.length; i; ) {
-          this.addEventListener(types[--i], handler, false);
+        for (var i = toBind.length; i; ) {
+          this.addEventListener(toBind[--i], handler, false);
         }
       } else {
         this.onmousewheel = handler;
       }
+      $.data(this, 'mousewheel-line-height', special.getLineHeight(this));
+      $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
     },
     teardown: function () {
       if (this.removeEventListener) {
-        for (var i = types.length; i; ) {
-          this.removeEventListener(types[--i], handler, false);
+        for (var i = toBind.length; i; ) {
+          this.removeEventListener(toBind[--i], handler, false);
         }
       } else {
         this.onmousewheel = null;
       }
+      $.removeData(this, 'mousewheel-line-height');
+      $.removeData(this, 'mousewheel-page-height');
+    },
+    getLineHeight: function (elem) {
+      var $elem = $(elem),
+      $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
+      if (!$parent.length) {
+        $parent = $('body');
+      }
+      return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
+    },
+    getPageHeight: function (elem) {
+      return $(elem).height();
+    },
+    settings: {
+      adjustOldDeltas: true,
+      normalizeOffset: true
     }
   };
   $.fn.extend({
     mousewheel: function (fn) {
-      return fn ? this.on('mousewheel', fn)  : this.trigger('mousewheel');
+      return fn ? this.bind('mousewheel', fn)  : this.trigger('mousewheel');
     },
     unmousewheel: function (fn) {
-      return this.off('mousewheel', fn);
+      return this.unbind('mousewheel', fn);
     }
   });
   function handler(event) {
     var orgEvent = event || window.event,
-    args = [
-    ].slice.call(arguments, 1),
+    args = slice.call(arguments, 1),
     delta = 0,
-    returnValue = true,
     deltaX = 0,
-    deltaY = 0;
+    deltaY = 0,
+    absDelta = 0,
+    offsetX = 0,
+    offsetY = 0;
     event = $.event.fix(orgEvent);
     event.type = 'mousewheel';
-    if (orgEvent.wheelDelta) {
-      delta = orgEvent.wheelDelta / 120;
+    if ('detail' in orgEvent) {
+      deltaY = orgEvent.detail * - 1;
     }
-    if (orgEvent.detail) {
-      delta = - orgEvent.detail / 3;
+    if ('wheelDelta' in orgEvent) {
+      deltaY = orgEvent.wheelDelta;
     }
-    deltaY = delta;
-    if (orgEvent.axis !== undefined && orgEvent.axis === orgEvent.HORIZONTAL_AXIS) {
+    if ('wheelDeltaY' in orgEvent) {
+      deltaY = orgEvent.wheelDeltaY;
+    }
+    if ('wheelDeltaX' in orgEvent) {
+      deltaX = orgEvent.wheelDeltaX * - 1;
+    }
+    if ('axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS) {
+      deltaX = deltaY * - 1;
       deltaY = 0;
-      deltaX = - 1 * delta;
     }
-    if (orgEvent.wheelDeltaY !== undefined) {
-      deltaY = orgEvent.wheelDeltaY / 120;
+    delta = deltaY === 0 ? deltaX : deltaY;
+    if ('deltaY' in orgEvent) {
+      deltaY = orgEvent.deltaY * - 1;
+      delta = deltaY;
     }
-    if (orgEvent.wheelDeltaX !== undefined) {
-      deltaX = - 1 * orgEvent.wheelDeltaX / 120;
+    if ('deltaX' in orgEvent) {
+      deltaX = orgEvent.deltaX;
+      if (deltaY === 0) {
+        delta = deltaX * - 1;
+      }
     }
+    if (deltaY === 0 && deltaX === 0) {
+      return;
+    }
+    if (orgEvent.deltaMode === 1) {
+      var lineHeight = $.data(this, 'mousewheel-line-height');
+      delta *= lineHeight;
+      deltaY *= lineHeight;
+      deltaX *= lineHeight;
+    } else if (orgEvent.deltaMode === 2) {
+      var pageHeight = $.data(this, 'mousewheel-page-height');
+      delta *= pageHeight;
+      deltaY *= pageHeight;
+      deltaX *= pageHeight;
+    }
+    absDelta = Math.max(Math.abs(deltaY), Math.abs(deltaX));
+    if (!lowestDelta || absDelta < lowestDelta) {
+      lowestDelta = absDelta;
+      if (shouldAdjustOldDeltas(orgEvent, absDelta)) {
+        lowestDelta /= 40;
+      }
+    }
+    if (shouldAdjustOldDeltas(orgEvent, absDelta)) {
+      delta /= 40;
+      deltaX /= 40;
+      deltaY /= 40;
+    }
+    delta = Math[delta >= 1 ? 'floor' : 'ceil'](delta / lowestDelta);
+    deltaX = Math[deltaX >= 1 ? 'floor' : 'ceil'](deltaX / lowestDelta);
+    deltaY = Math[deltaY >= 1 ? 'floor' : 'ceil'](deltaY / lowestDelta);
+    if (special.settings.normalizeOffset && this.getBoundingClientRect) {
+      var boundingRect = this.getBoundingClientRect();
+      offsetX = event.clientX - boundingRect.left;
+      offsetY = event.clientY - boundingRect.top;
+    }
+    event.deltaX = deltaX;
+    event.deltaY = deltaY;
+    event.deltaFactor = lowestDelta;
+    event.offsetX = offsetX;
+    event.offsetY = offsetY;
+    event.deltaMode = 0;
     args.unshift(event, delta, deltaX, deltaY);
+    if (nullLowestDeltaTimeout) {
+      clearTimeout(nullLowestDeltaTimeout);
+    }
+    nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
     return ($.event.dispatch || $.event.handle).apply(this, args);
   }
-}) (jQuery); (function ($, window, undefined) {
+  function nullLowestDelta() {
+    lowestDelta = null;
+  }
+  function shouldAdjustOldDeltas(orgEvent, absDelta) {
+    return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
+  }
+})); (function ($, window, undefined) {
   '$:nomunge';
   var elems = $([]),
   jq_resize = $.resize = $.extend($.resize, {
@@ -14267,13 +13154,7 @@ $(function ($) {
       return this;
     },
     indexSubcategories: function () {
-      var items = this.getItems(),
-      i_l = this.getItemsCount(),
-      subcategories = [
-      ];
-      while (i_l--) {
-        this.pushIfUnique(subcategories, items[i_l].getSubcategory());
-      }
+      var subcategories = this.getSubcategories().sort();
       this.setSubcategories(subcategories);
       return this;
     },
@@ -22889,10 +21770,10 @@ $(function ($) {
         'wof-unlock': {
           name: 'Valentine\'s wheel '
         },
-        'avatar-bouquet': {
+        'avatar-part-1': {
           name: 'Avatar graphic '
         },
-        'avatar-kisses': {
+        'avatar-part-2': {
           name: 'Avatar graphic '
         }
       }
@@ -27788,7 +26669,7 @@ Game.TextHandler = function () {
         } catch (e) {
           return a;
         }
-      }).replace(/\[report=(.*?)\](.*?)\[\/report\]/g, function (a, b, c) {
+      }).replace(/\[report=(\d+[0-9a-f]{10})\](.*?)\[\/report\]/g, function (a, b, c) {
         var str = b.escapeHTML();
         if (str.length < 11) return a;
         keep.push('<a class=\'reportlink\' href=\'javascript:void(parent.ReportWindow.open('
@@ -27815,10 +26696,10 @@ Game.TextHandler = function () {
         return '<a href=\'javascript:void(parent.MarkerUi.importMarker(' + x + ',' + y + ',"' + desc.escapeHTML() + '"))\'>Marker: ' + desc + '</a>';
       });
       for (var k in sm) {
-        m = m.replace(new RegExp('(^|\\s|\\u2060)' + k.replace(/([\)\.\^\(])/g, '\\$1'), 'g'), ' <img src=\'https://westzzs.innogamescdn.com/images/chat/emoticons/' + sm[k] + '.png?1\' />');
+        m = m.replace(new RegExp('(^|\\s|\\u2060)(' + k.replace(/([\)\.\^\(])/g, '\\$1') + ')', 'g'), ' <img src=\'https://westzzs.innogamescdn.com/images/chat/emoticons/' + sm[k] + '.png?1\' alt=\'$2\' />');
       }
       for (var k in sa) {
-        m = m.replace(new RegExp('(^|\\s|\\u2060)' + k, (sa[k].flags ? sa[k].flags : 'g')), ' <img src=\'https://westzzs.innogamescdn.com/images/chat/emoticons/' + sa[k].src + '\' /> ' + (sa[k].text ? sa[k].text : '') + '');
+        m = m.replace(new RegExp('(^|\\s|\\u2060)(' + k + ')', (sa[k].flags ? sa[k].flags : 'g')), ' <img src=\'https://westzzs.innogamescdn.com/images/chat/emoticons/' + sa[k].src + '\' alt=\'$2\' /> ' + (sa[k].text ? sa[k].text : '') + '');
       }
       if (west && west.events && west.events.Manager) {
         west.common.forEach(west.events.Manager.getRunningEventsCurrencies(), function (obj) {
@@ -28799,7 +27680,7 @@ ItemPopup = function (item_obj, options) {
     var wearItem = Wear.wear[item.type];
     if (bagItem || (wearItem && wearItem.obj.item_id == item.item_id)) {
       var count = (bagItem != undefined ? bagItem.count : 0) + (wearItem != undefined && wearItem.obj.item_id == item.item_id ? 1 : 0);
-      foot_cont.append($('br /><p class="inventory_alreadyown">' + 'Number in inventory:' + '(' + count + ')</p>'));
+      foot_cont.append($('<br /><p class="inventory_alreadyown">' + 'Number in inventory:' + '(' + count + ')</p>'));
     }
   }
   if (!item_upgradeable) {
@@ -28945,17 +27826,32 @@ west.define('west.notification.ToastNotification', west.gui.Component, {
   },
   show: function () {
     var self = this,
+    divMain = $(self.divMain),
     onClick = function () {
       self.hide();
     };
     $('#ui_notifications').append(this.divMain);
-    $(this.divMain).unbind('click').click(onClick).animate({
-      opacity: 'toggle',
-      height: 'toggle'
-    }, 'slow').delay(10000).animate({
-      opacity: 'toggle',
-      height: 'toggle'
-    }, 'slow', onClick);
+    $(this.divMain).unbind('click').click(onClick).queue(function (next) {
+      var height = divMain.height();
+      divMain.height(0);
+      divMain.height();
+      divMain.css({
+        'transition-duration': '600ms',
+        display: 'block',
+        height: height + 'px',
+        opacity: '1'
+      });
+      next()
+    }).delay(10600).queue(function (next) {
+      divMain.css({
+        height: '0',
+        opacity: '0'
+      });
+      next()
+    }).delay(600).queue(function (next) {
+      onClick();
+      next()
+    });
     return this;
   },
   hide: function () {
@@ -37934,7 +36830,8 @@ this.divMain = $('<div class=\'pin collapsed\'></div>').css({
 });
 this.divMain.appendTo(Map.mapEl);
 if (Markers.mode === Markers.MODE_HOVER) {
-this.divMain.on('mouseenter', this.show.bind(this)).on('mouseleave', this.hide.bind(this));
+this.divMain.get(0).addEventListener(MouseEvent.POINTER_ENTER, this.show.bind(this));
+this.divMain.get(0).addEventListener(MouseEvent.POINTER_LEAVE, this.hide.bind(this));
 } else {
 this.buildPopup();
 }
@@ -37989,7 +36886,7 @@ new west.gui.Groupframe('marker-menu').appendToContentPane(input.getMainDiv(), i
   'width': '300px'
 }).on('click', function (event) {
   MarkerUi.Events.delegate(event, this);
-}.bind(this)).on('mousedown', function (e) {
+}.bind(this)).on(MouseEvent.POINTER_DOWN, function (e) {
   e.stopPropagation();
 }).appendTo(this.divMain);
 this.popupCreated = true;
@@ -43196,6 +42093,7 @@ traitor: 'Traitor',
 reservist: 'Reservist',
 recruit: 'Recruit',
 'private': 'Private',
+sergeant: 'Sergeant',
 captain: 'Captain',
 general: 'General'
 },
@@ -43608,26 +42506,6 @@ var popup = '<div>'
 + 'Level' + '&nbsp;<b>' + client.level + '</b> ' + classLabel
 + '</div>';
 return $('<div class=\'contact_client\' />').append(classImage, '<div class=\'client_level\'>' + client.level + '</div>', $('<div class=\'client_details\' />').append(Chat.Formatter.formatStatus(client, true) + clientInfo)).attr('title', popup);
-},
-formatFriendClient: function (client) {
-var clientInfo = $(Chat.Formatter.formatClient(client)).removeAttr('onclick'),
-div = $('<div class=\'friend_client\' onclick=\'ChatWindow.Client.onClick(arguments, "' + client.id + '");\' />'),
-charData = $('<div class=\'friend_char\' />');
-var avatar = $('<div class=\'friend_avatar_inner\' />');
-if (client.avatar) {
-if ('null' != client.avatar.background)
-tw2widget.avatarPicture(avatar, 'small', client.avatar);
- else if (client.subClass) {
-avatar.append('<img class=\'old-avatar\' src=\'https://westzzs.innogamescdn.com/images/avatars/' + client.subClass + '_small.png\' alt=\'\' />');
-}
-}
-if (client.level)
-div.append('<div class=\'friend_level\'>' + client.level + '</div>');
-if (client.charClass)
-charData.append(Chat.Formatter.getClassImage(client.charClass));
-if (undefined != client.professionId)
-charData.append(Chat.Formatter.getProfessionImage(client.professionId));
-return div.click(onclick).append($('<div class=\'friend_avatar\' />').append(avatar, '<div class=\'friend_avatar_frame\' />'), charData, $('<div class=\'friend_details\' />').append(clientInfo, '<br />', Chat.Formatter.formatStatus(client)));
 },
 formatStatus: function (client) {
 var stat = Chat.Formatter.getStatus(client.statusId);
@@ -44229,10 +43107,14 @@ titles.recruit
 titles['private']
 ],
 4: [
+'sergeant',
+titles.sergeant
+],
+5: [
 'captain',
 titles.captain
 ],
-5: [
+6: [
 'general',
 titles.general
 ]
@@ -45142,7 +44024,7 @@ self.switchTab(tab.id);
 this.window.appendToContentPane(tab.getMainDiv());
 this.tabs[tab.id] = tab;
 this.tabsl++;
-Chat.Layout.Dropper($('._tab_id_' + tab.id, this.window.getMainDiv()), {
+Chat.Layout.Dropper(this.window.getMainDiv(), '._tab_id_' + tab.id, {
 targets: [
 'body',
 '.tw2gui_window.chat'
@@ -45257,7 +44139,7 @@ this.tabs = {
 this.activeTab = '';
 }
 };
-Chat.Layout.Dropper = function (el, options, onDrop) {
+Chat.Layout.Dropper = function (container, selector, options, onDrop) {
 if (!jQuery.isFunction(onDrop)) return;
 options = jQuery.extend({
 targets: [
@@ -45271,13 +44153,13 @@ srcEvt,
 srcPos,
 distance,
 off;
-jQuery(el).live('mousedown.draggable', function (e) {
+jQuery(container).on('mousedown.draggable', selector, function (e) {
 if (jQuery(this).hasClass(options.dragClass) || (draggable && passed) || e.metaKey || e.shiftKey || e.ctrlKey) return;
 draggable = $('<div />').addClass(options.dragClass).append(jQuery(this).clone()).css({
 position: 'absolute',
 'z-index': 9999
 });
-off = jQuery(el).offset();
+off = jQuery(this).offset();
 var margins = {
 left: (parseInt(draggable.css('marginLeft'), 10) || 0),
 top: (parseInt(draggable.css('marginTop'), 10) || 0)
@@ -48925,7 +47807,7 @@ QuestGroupWindowView.init(QuestGroupWindow.window);
 QuestGroupWindow.showSolvedGroups(questId);
 };
 wman.registerReloadHandler(/^questline/, function (uid) {
-QuestGroupWindow.open(this.groupId);
+QuestGroupWindow.open(QuestGroupWindow.groupId);
 });
 QuestGroupWindow.showSolvedGroups = function (questId) {
 QuestGroupWindowView.renderQuestSolved();
@@ -49243,7 +48125,9 @@ questCallback.deactivate(quest);
 questCallback.activate(quest);
 if (quest.watched && !quest.solved && quest.accepted && !el.length) {
 obj.hasQuests = true;
-(minimized) ? obj.minimize()  : obj.show();
+if (!minimized) {
+obj.show();
+}
 $('.quest_tracker_container').append(quest.getQuestTrackerEl());
 obj.trackedQuests[quest.id] = quest;
 obj.toggleCollapse($('#questtracker_quest_' + quest.id + ' .collapse', this.dom), quest, obj.getCollapseStatus(quest), true);
@@ -51044,7 +49928,7 @@ if (MessagesWindow.options.insert_to)
 that.NewTelegram.receivers = MessagesWindow.options.insert_to;
 that.toggleNew();
 }
-$('input[name=selectall]', MessagesWindow.Telegram.DOM).attr('checked', false);
+$('input[name=selectall]', MessagesWindow.Telegram.DOM).prop('checked', false);
 that.all_selected = false;
 MessagesWindow.window.renameTab('telegram', 'Telegrams');
 Character.setToRead('messages', false);
@@ -51052,7 +49936,7 @@ return;
 }, MessagesWindow);
 };
 MessagesWindow.Telegram.selectAll = function () {
-$('input[name=delete_messages]', MessagesWindow.Telegram.DOM).attr('checked', this.all_selected ? false : true);
+$('input[name=delete_messages]', MessagesWindow.Telegram.DOM).prop('checked', this.all_selected ? false : true);
 this.all_selected = !this.all_selected;
 };
 MessagesWindow.Telegram.switchShow = function () {
@@ -51065,7 +49949,7 @@ if (this.visibles.length == 5)
 this.visibles = [
 ];
  else if (this.visibles.length == 0)
-$('input[name=messages_show]', MessagesWindow.Telegram.DOM).attr('checked', true);
+$('input[name=messages_show]', MessagesWindow.Telegram.DOM).prop('checked', true);
 this.fetchTelegrams(0);
 };
 MessagesWindow.Telegram.switchFolder = function () {
@@ -51175,7 +50059,7 @@ MessagesWindow.Telegram.multiDelete = function () {
 var message_ids = this.getSelected();
 if (message_ids.length)
 this.deleteTelegram(message_ids);
-$('#messages input[name=selectall]', MessagesWindow.Telegram.DOM).attr('checked', '');
+$('#messages input[name=selectall]', MessagesWindow.Telegram.DOM).prop('checked', false);
 };
 MessagesWindow.Telegram.getSelected = function () {
 var message_ids = [
@@ -51542,7 +50426,7 @@ return function ()
 };
 var selectAll = function ()
 {
-$('#rl_mark_allreports', MessagesWindow.Report.DOM).is(':checked') ? $('input.rl_cb_mark_report', MessagesWindow.Report.DOM).attr('checked', 'checked')  : $('input.rl_cb_mark_report', MessagesWindow.Report.DOM).removeAttr('checked');
+$('input.rl_cb_mark_report', MessagesWindow.Report.DOM).prop('checked', $('#rl_mark_allreports', MessagesWindow.Report.DOM).is(':checked'));
 };
 var switchFilter = function (value)
 {
@@ -51631,7 +50515,7 @@ Ajax.remoteCall('reports', 'delete_reports', params, function (json)
 if (json['result'])
 {
 new UserMessage('Reports were deleted'.escapeHTML(), UserMessage.TYPE_SUCCESS).show();
-$('#rl_mark_allreports', MessagesWindow.Report.DOM).removeAttr('checked');
+$('#rl_mark_allreports', MessagesWindow.Report.DOM).prop('checked', false);
 MessagesWindow.Report.init();
 } 
 else
@@ -54336,10 +53220,15 @@ ServerInfoWindow.onDestroy = function (ok)
 {
 if ('OK' === ok) return;
 if (ServerInfoWindow.currentCampaign) {
+if (ServerInfoWindow.currentCampaign.claimed !== true) {
+if (ServerInfoWindow.currentCampaign.on_view) {
+ServerInfoWindow.Announcements.getReward(false);
+}
 Ajax.remoteCall('serverinfo', 'dismiss_campaign', {
 camp_id: ServerInfoWindow.currentCampaign.campaign_id,
 type: ServerInfoWindow.currentCampaign.type
 });
+}
 for (var i = 0, l = Game.interstitialData.length; i < l; i++) {
 if (Game.interstitialData[i].campaign_id == ServerInfoWindow.currentCampaign.campaign_id) {
 Game.interstitialData.splice(Game.interstitialData.indexOf(Game.interstitialData[i]), 1);
@@ -54437,12 +53326,16 @@ nextCampaign = Game.interstitialData[i];
 }
 }
 ServerInfoWindow.currentCampaign = nextCampaign;
+ServerInfoWindow.triggerLateCTA = false;
 Ajax.remoteCall('serverinfo', 'track_view', {
 camp_id: nextCampaign.campaign_id,
 type: nextCampaign.type
 });
-if ('crm' === nextCampaign.type || 'crm3' === nextCampaign.type) {
-var imgUrl = 'https://westzzs.innogamescdn.com/images/crm/crm_' + nextCampaign.campaign_id + '.jpg';
+if ('crm3' === nextCampaign.type) {
+var imgUrl = '';
+if ('crm3' === nextCampaign.type) {
+imgUrl = 'https://westzzs.innogamescdn.com/images/crm/crm_' + nextCampaign.content_id + '.jpg';
+}
 $('.announcements .tw2gui_window_tabbar').hide();
 $('.announcements .tw2gui_window_content_pane').css('cursor', 'pointer');
 $('.announcements .tw2gui_inner_window_bg2').css('background-image', 'url(' + imgUrl + ')');
@@ -54480,6 +53373,16 @@ that.window.empty().append(scroll.getMainDiv(), $('<div class=\'wnd-footer\' />'
 };
 ServerInfoWindow.Announcements.readCRM = function ()
 {
+if ('crm3' == ServerInfoWindow.currentCampaign.type) {
+Ajax.remoteCall('serverinfo', 'track_allow', {
+camp_id: ServerInfoWindow.currentCampaign.campaign_id,
+type: ServerInfoWindow.currentCampaign.type
+});
+}
+ServerInfoWindow.Announcements.getReward(true);
+};
+ServerInfoWindow.Announcements.getReward = function (closeWindow)
+{
 Ajax.remoteCall('serverinfo', 'claim_reward', {
 camp_id: ServerInfoWindow.currentCampaign.campaign_id,
 type: ServerInfoWindow.currentCampaign.type
@@ -54490,7 +53393,9 @@ ServerInfoWindow.Announcements.handleReward(resp.reward);
 } else if (resp.error && resp.msg !== undefined) {
 new UserMessage(resp.msg, UserMessage.TYPE_ERROR).show();
 }
+if (closeWindow) {
 ServerInfoWindow.window.destroy('OK');
+}
 });
 };
 ServerInfoWindow.Announcements.read = function ()
@@ -54509,6 +53414,9 @@ ServerInfoWindow.window.destroy('OK');
 };
 ServerInfoWindow.Announcements.handleReward = function (rewardData)
 {
+if (ServerInfoWindow.currentCampaign) {
+ServerInfoWindow.currentCampaign.claimed = true;
+}
 var reward = new tw2widget.reward.RewardDialog('For your troubles', null, function () {
 ServerInfoWindow.Announcements.handleCta();
 });
@@ -55932,7 +54840,7 @@ scroll = new west.gui.Scrollbar(false, false).addDragListener(function (bar, pos
 iframe.contents().find('html, body').scrollTop(pos);
 });
 wnd.appendToContentPane(iframe, scroll.getMainDiv(), openNewBtn.getMainDiv());
-iframe.load(function () {
+iframe.on('load', function () {
 var ct = iframe.contents();
 ct.find('body').css({
 'background': 'transparent',
@@ -56353,33 +55261,6 @@ if (!view) return;
 delete roomViews[room.id];
 view.dispose();
 });
-var updateFriendsList = function (client) {
-var friends = Chat.Friendslist.getFriends(),
-div = $('#ui_chat .container .friend'),
-client;
-div.children().remove();
-friends.sort(function (a, b) {
-return a.pname.toLowerCase() > b.pname.toLowerCase() ? 1 : - 1;
-});
-var ondiv = $('<div class=\'friends_online\' />'),
-offdiv = $('<div class=\'friends_offline\' />');
-for (var i = 0; i < friends.length; i++) {
-var el = $('<div id=\'flist_' + friends[i].id + '\' class=\'chat_channel entry_friend\' />').append(Chat.Formatter.formatFriendClient(friends[i]));
-if (Chat.Resource.Client.STATUS_OFFLINE == friends[i].statusId)
-offdiv.append(el);
- else
-ondiv.append(el);
-}
-offdiv.toggle();
-div.append($('<h2>' + 'Online' + '</h2>').click(function () {
-ondiv.toggle();
-}), ondiv, $('<h2>' + 'Offline' + '</h2>').click(function () {
-offdiv.toggle();
-}), offdiv);
-};
-EventHandler.listen('friend_added', updateFriendsList);
-EventHandler.listen('friend_removed', updateFriendsList);
-EventHandler.listen('friend_left', updateFriendsList);
 var RoomUiView = west.createClass(null, {
 init: function (room) {
 this.room = room;
@@ -58639,7 +57520,7 @@ if (json.easyPay) {
 PremiumBuyWindow.closeEasyPay();
 PremiumBuyWindow.easyPayHost = 'https://' + json.payHost;
 iframe = $(PremiumBuyWindow.getIframeHtml(244, 530));
-iframe.load(function () {
+iframe.on('load', function () {
 if (!iframe.attr('src')) return;
 wrapper.animate({
 top: 0
@@ -59263,7 +58144,7 @@ var $frame = this.getFrameHtml();
 model.setFrame($frame);
 $root.append($frame);
 this.updateFrameSrc().updatePosition();
-$frame.load(function () {
+$frame.on('load', function () {
 if (!$frame.attr('src')) {
 return this;
 };
@@ -62721,7 +61602,7 @@ for (j = 0; j < grp.answers.length; j += 1) {
 var a = grp.answers[j];
 answers.push({
 answer_id: a.answer_id,
-result_value: Survey.window.$('#_answer_id_' + a.answer_id).attr('checked') ? 1 : 0
+result_value: Survey.window.$('#_answer_id_' + a.answer_id).prop('checked') ? 1 : 0
 })
 }
 }
@@ -65780,7 +64661,8 @@ var gradeCount = {
 '0': 0,
 '1': 0,
 '2': 0,
-'3': 0
+'3': 0,
+'4': 0
 },
 totalCnt = 0;
 var getRecruitcount = function () {
@@ -65847,6 +64729,8 @@ pp = that.preBattle.getPrivilege(player);
 if (pp < ownPriv) {
 if (pp != gv.CAPTAIN && ownPriv > gv.CAPTAIN)
 grades.append(getPrivLink(player, pIdx, gv.CAPTAIN, 'Promote to captain'));
+if (pp != gv.SERGEANT)
+grades.append(getPrivLink(player, pIdx, gv.SERGEANT, 'Appoint as sergeant'));
 if (pp != gv.PRIVATE)
 grades.append(getPrivLink(player, pIdx, gv.PRIVATE, 'Appoint as private'));
 if (pp != gv.RECRUIT)
@@ -66146,10 +65030,6 @@ if (cell === idx) return;
 cell = idx;
 var offx = 0,
 offy = 0;
-if ($.browser.msie && $.browser.version <= 7) {
-offx = cellSize / 2;
-offy = cellSize / 2;
-}
 obj.style.left = - (x * mapWidth * cellSize - offx) + 'px';
 obj.style.top = - (y * mapHeight * cellSize - offy) + 'px';
 };
@@ -66198,24 +65078,27 @@ TRAITOR: '-2',
 RESERVIST: '-1',
 RECRUIT: '0',
 PRIVATE: '1',
-CAPTAIN: '2',
-GENERAL: '3'
+SERGEANT: '2',
+CAPTAIN: '3',
+GENERAL: '4'
 };
 var gradeNames = {
 '-2': 'traitor',
 '-1': 'reservist',
 '0': 'recruit',
 '1': 'private',
-'2': 'captain',
-'3': 'general'
+'2': 'sergeant',
+'3': 'captain',
+'4': 'general'
 };
 var gradeLocales = {
 '-2': 'Traitor',
 '-1': 'Reservist',
 '0': 'Recruit',
 '1': 'Private',
-'2': 'Captain',
-'3': 'General'
+'2': 'Sergeant',
+'3': 'Captain',
+'4': 'General'
 };
 var getGradeImg = function (gradeId, title, cls) {
 return '<img class="' + (cls || '') + '" src="https://westzzs.innogamescdn.com/images/chat/servicegrade_' +
@@ -69650,6 +68533,7 @@ if (item.isPromoted()) {
 west.common.pushIfUnique(promoted, item_id);
 }
 });
+category.indexSubcategories();
 categories[category_id] = category;
 west.common.pushIfUnique(categories_ids, category_id);
 });
@@ -74196,7 +73080,6 @@ detailEmployer = $('<div class="employer_content" />');
 openEmployerQuests = $('<div />');
 fingerBoard = $('<div class="fingerboard" />');
 questButtonArea = $('<div class="quest_buttonarea" />');
-questVideoArea = $('');
 employerScrollpane = new west.gui.Scrollpane();
 questEmployerMainDiv.append(detailEmployer, questButtonArea, employerDesc.append(employerScrollpane.appendContent($('<div />').append('<h2 style="margin-left:10px;padding-top:10px;">' + 'Open quests' + '</h2><div class="quest_splitter" />', openEmployerQuests)).getMainDiv(), fingerBoard));
 EventHandler.listen('employer_active', switchEmployer);
@@ -74230,38 +73113,12 @@ detailEmployer.append($('<div style="width: 295px;" />').append(photo, employerI
 QuestEmployerView.buildQuestLog(employer);
 questButtonArea.empty();
 fingerBoard.empty();
-showVideo(employer);
 if (employer.x && employer.y) {
 var way_time = Map.calcWayTime(Character.position, employer);
 fingerBoard.append('<div style="float: left;margin-left: 4px;">' + 'Distance:' + ' ' + way_time.formatDuration() + '</div>', new west.gui.Button('Walk', function () {
 QuestEmployerWindow.startWalk(employer);
 QuestEmployerWindow.window.destroy();
 }).getMainDiv());
-}
-if (employer.video_path) {
-openEmployerQuests.append($('<div class="video" />').append(new west.gui.Button('View video', function () {
-showVideo(employer);
-}).getMainDiv()));
-}
-};
-var showVideo = function (employer) {
-if (employer.video_path && !employer.video_seen) {
-QuestEmployerWindow.window.appendToContentPane('<div id="flashplayer"><a href="/videos/' + employer.video_path + '" id="questEmployerVideo"></a></div>');
-flowplayer('questEmployerVideo', {
-src: 'flash/flowplayer-3.2.7.swf',
-wmode: 'opaque'
-}, {
-clip: {
-autoPlay: false,
-autoBuffering: true
-}
-}).onFinish(function () {
-$('#flashplayer').remove();
-Ajax.remoteCall('quest_employer', 'set_video_seen', {
-employer: employer.key
-}, function (json) {
-});
-});
 }
 };
 QuestEmployerView.showQuest = function (quest) {
@@ -75516,7 +74373,7 @@ var log = function () {
 if (!DEBUG) return;
 var args = Array.prototype.slice.call(arguments);
 args.unshift('battleserver socket: ');
-if ($.browser.msie)
+if (typeof console.log !== 'function')
 console.log(args);
  else
 console.log.apply(console, args);
