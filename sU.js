@@ -1,8 +1,8 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.8',
 colorTxtNew: '"dayofdead!" and "independence!" icon added',
-quicksearch: '1.4.6',
-quicksearchNew: 'New sets (Valentine\'s Day event 2017 - TW v2.49)',
+quicksearch: '1.4.7',
+quicksearchNew: 'New sets & items (veteran shop & Easter event 2017 - TW v2.53)',
 TWLT: '1.36.1',
 TWLTNew: 'Bugfixes',
 Tweaker: '0.1.19',
