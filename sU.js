@@ -1,8 +1,8 @@
 var scriptUpdate = {
 colorTxt: '0.2.9.8',
 colorTxtNew: '"dayofdead!" and "independence!" icon added',
-quicksearch: '1.4.8',
-quicksearchNew: 'Bugfix for sorting method<br><br><b>v1.4.7:</b><br>New sets & items (veteran shop & Easter event 2017 - TW v2.53)',
+quicksearch: '1.4.9',
+quicksearchNew: 'New set (Wright brothers Sale 2 - TW v2.53)<br>-Better updater',
 TWLT: '1.38',
 TWLTNew: '-New feature: SkipOpen - Open a common bag with one click. The confirmation and result message will be skipped.<br>-New feature: ShortPopups - Make the item popups shorter<br>-BonusSearch: find now all items with a selected bonus, too<br>-EquipManager+: When rename a set, the name is already in textfield',
 Tweaker: '0.1.19',
