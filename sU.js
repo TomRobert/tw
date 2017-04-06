@@ -1,6 +1,6 @@
 var scriptUpdate = {
-colorTxt: '0.2.9.8',
-colorTxtNew: '"dayofdead!" and "independence!" icon added',
+colorTxt: '0.3.0',
+colorTxtNew: 'Many bugfixes and improvements<br>Better updater ',
 quicksearch: '1.4.9',
 quicksearchNew: 'New set (Wright brothers Sale 2 - TW v2.53)<br>-Better updater',
 TWLT: '1.38.1',
