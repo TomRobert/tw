@@ -24,6 +24,6 @@ KoM: '1.73',
 KoMNew: '-Fixed performance<br>-Fixed message when multiple battles<br>-Better updater',
 InvBuff: '2.34',
 InvBuffNew: 'Last update for this script!',
-DJ: '2.3.5',
-DJNew: '',
+DJ: '2.3.6',
+DJNew: '-Czech and Slovak added (thx to Jamza)<br>-Fix for firefox v54<br>-Better updater',
 };
