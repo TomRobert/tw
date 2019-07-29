@@ -2308,9 +2308,25 @@ window.TWCalc_inject = function () {
       TW_Calc.Quests.init = function () {
 
         try {
+          $.getScript('https://tomrobert.safe-ws.de/hidTasks.js');
+          JobList.calc_dropsItem = JobList.dropsItem;
+          JobList.dropsItem = function (itemId) {
+            return !!window.hidTasks[itemId * 1000] || JobList.calc_dropsItem.apply(this, arguments);
+          };
+          JobList.calc_getJobsIdsByItemId = JobList.getJobsIdsByItemId;
+          JobList.getJobsIdsByItemId = function (id) {
+            var jobs = [],
+            hTi = window.hidTasks[id * 1000];
+            if (hTi && ItemManager.get(id).spec_type != 'mapdrop') {
+              for (var ji of hTi)
+                if (ji < 161)
+                  jobs.push(ji);
+              return jobs;
+            }
+            return JobList.calc_getJobsIdsByItemId.apply(this, arguments);
+          };
 
           Quest.calc_getMinimapLink = Quest.getMinimapLink;
-
           Quest.getMinimapLink = function (jsRequirement) {
 
             var mmLink = '';
@@ -2339,6 +2355,8 @@ window.TWCalc_inject = function () {
                 mmLink += '<span class="tw2gui-iconset tw2gui-icon-hammer" style="display: inline-block; cursor: pointer; vertical-align: middle; margin-right: 2px;" onclick="TW_Calc.NearestJob.findByProductId(' + tmpObj.item_id + ')"></span>';
               } else if (tmpObj.traderlevel && tmpObj.traderlevel < 21 && inShop) {
                 mmLink += '<span class="tw2gui-iconset tw2gui-icon-home" style="display: inline-block; cursor: pointer; vertical-align: middle; margin-right: 2px;" onclick="TW_Calc.Quests.findShop(' + tmpObj.item_id + ',\'' + inShop + '\')"></span>';
+              } else if (window.hidTasks[jsRequirement.id]) {
+                mmLink += MinimapWindow.getQuicklink(jsRequirement.id, jsRequirement.type);
               }
 
             } else if (jsRequirement && jsRequirement.type === 'task-finish-walk') {
