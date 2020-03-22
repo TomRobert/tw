@@ -4,7 +4,7 @@
 // @author westernblumi
 // @description Fort battle tools for The West!
 // @include https://*.the-west.*/game.php*
-// @version	1.15
+// @version	1.16
 // @grant none
 // ==/UserScript==
 // translation: westernblumi(German & English), pepe100(Spanish), Ruslan Jackson(Italiano)
@@ -16,7 +16,7 @@
     document.body.removeChild(script);
 })(function() {
     TWFBTstart = {
-        version: '1.15',
+        version: '1.16',
         langs: {
             en: {
                 language: 'English',
@@ -1561,36 +1561,32 @@
 				return [Math.round(averageAttacker/TWFBT.Statistics.stats.result.attackerlist.length), Math.round(averageDefender/TWFBT.Statistics.stats.result.defenderlist.length), 'averageWeaponDamage'];
 			};
 			
-			TWFBT.Statistics.getBuffs = function(){
-				var weaponContainerAttacker = {'0-0': 0, '20-40': 0, '25-25': 0, '25-75': 0, '20-60': 0, '40-60': 0, '30-30': 0, '40-40': 0, '50-50': 0, '60-60': 0, '75-75': 0, '100-100': 0,};
-				var weaponContainerDefender = {'0-0': 0, '20-40': 0, '25-25': 0, '25-75': 0, '20-60': 0, '40-60': 0, '30-30': 0, '40-40': 0, '50-50': 0, '60-60': 0, '75-75': 0, '100-100': 0,};
-				for (x = 0; x < TWFBT.Statistics.stats.result.attackerlist.length; x++) {
-					var attacker = TWFBT.Statistics.stats.result.attackerlist[x];
-					var weapon = ItemManager.get(attacker.weaponid);
-					var damage = weapon.getDamage();
-					var groundDamage = TWFBT.Statistics.getGroundDamage(attacker.charlevel, weapon.bonus.item, weapon.getItemLevel());
-					var damageMin = attacker.weaponmindmg-(damage.min+groundDamage);
-					var damageMax = attacker.weaponmaxdmg-(damage.max+groundDamage);
-					if(weaponContainerAttacker[damageMin + '-' + damageMax] == undefined){
-						damageMin = Math.round(damageMin/5)*5;
-						damageMax = Math.round(damageMax/5)*5;
-					} 
-					weaponContainerAttacker[damageMin + '-' + damageMax] += 1;
-				}
-				for (x = 0; x < TWFBT.Statistics.stats.result.defenderlist.length; x++) {
-					var defender = TWFBT.Statistics.stats.result.defenderlist[x];
-					var weapon = ItemManager.get(defender.weaponid);
-					var damage = weapon.getDamage();
-					var groundDamage = TWFBT.Statistics.getGroundDamage(defender.charlevel, weapon.bonus.item, weapon.getItemLevel());
-					var damageMin = defender.weaponmindmg-(damage.min+groundDamage);
-					var damageMax = defender.weaponmaxdmg-(damage.max+groundDamage);
-					if(weaponContainerDefender[damageMin + '-' + damageMax] == undefined || weaponContainerDefender[damageMin + '-' + damageMax] == NaN){
-						damageMin = Math.round(damageMin/5)*5;
-						damageMax = Math.round(damageMax/5)*5;
+			TWFBT.Statistics.getBuffs = function () {
+				var buffs = {},
+				loadBuffs = function (ad) {
+					var side = ad ? 'attack' : 'defend',
+					list = TWFBT.Statistics.stats.result[side + 'erlist'];
+					for (x of list) {
+						var weapon = ItemManager.get(x.weaponid),
+						damage = weapon.getDamage(),
+						groundDamage = TWFBT.Statistics.getGroundDamage(x.charlevel, weapon.bonus.item, weapon.getItemLevel()),
+						buff = Math.round((x.weaponmindmg - damage.min - groundDamage) / 5) * 5 + '-' + Math.round((x.weaponmaxdmg - damage.max - groundDamage) / 5) * 5;
+						if (!buffs[buff])
+						buffs[buff] = [0, 0];
+						buffs[buff][ad] += 1;
 					}
-					weaponContainerDefender[damageMin + '-' + damageMax] += 1;
+				},
+				weaponContainer = [{}, {}];
+				loadBuffs(0);
+				loadBuffs(1);
+				var sorted = Object.keys(buffs).sort(function (a, b) {
+					return a > b ? 1 : -1;
+				});
+				for (var i of sorted) {
+					weaponContainer[0][i] = buffs[i][0];
+					weaponContainer[1][i] = buffs[i][1];
 				}
-				return [weaponContainerAttacker, weaponContainerDefender];
+				return weaponContainer;
 			};
 			
 			TWFBT.Statistics.getCharClassById = function(charclass_id) {
